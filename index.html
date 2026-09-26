@@ -396,11 +396,13 @@
     // Identificamos si estás navegando como Administrador (?admin)
     var esAdmin = direccionWeb.indexOf("admin") !== -1;
 
-    // Usamos la API pública de "Hits" (muy usada en repositorios de GitHub)
+    // Generamos un número único basado en la hora exacta (milisegundos) para romper el caché
+    var antiCache = new Date().getTime();
+
     // El formato 'view' solo consulta el número, el formato 'count' le suma +1
     var urlContador = esAdmin 
-      ? "https://seeyoufarm.com" 
-      : "https://seeyoufarm.com";
+      ? "https://seeyoufarm.com" + antiCache
+      : "https://seeyoufarm.com" + antiCache;
 
     // Hacemos la consulta al servidor de imágenes de Hits
     fetch(urlContador)
@@ -410,14 +412,14 @@
       .then(function(svgTexto) {
         var elementoVistas = document.getElementById("vistas");
         if (elementoVistas) {
-          // Truco técnico: Extraemos los dígitos numéricos dentro del código del SVG
+          // Extraemos los dígitos numéricos dentro del código del SVG
           var coincidencia = svgTexto.match(/<text[^>]*>([\d,]+)<\/text>/g);
           if (coincidencia && coincidencia.length > 0) {
             // Tomamos el último texto del SVG que contiene el número de visitas
             var numeroFinal = coincidencia[coincidencia.length - 1].replace(/<\/?[^>]+(>|$)/g, "");
             elementoVistas.innerText = numeroFinal;
           } else {
-            elementoVistas.innerText = "1"; // Valor inicial si es la primera visita
+            elementoVistas.innerText = "1"; // Valor inicial por defecto
           }
         }
       })
@@ -443,6 +445,7 @@
     }
   });
 </script>
+
 
 
 
