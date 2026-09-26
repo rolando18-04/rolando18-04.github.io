@@ -121,7 +121,7 @@
             border: none;
         }
 
-        /* Click Wheel */
+        /* Click Wheel Blanca */
         .click-wheel {
             width: 150px;
             height: 150px;
@@ -191,9 +191,24 @@
             padding: 0;
         }
 
-        .btn-nav-lateral:active { color: #000; }
-        .btn-nav-lateral .icono { font-size: 14px; font-weight: bold; line-height: 1; }
-        .btn-nav-lateral .texto-pequeno { font-size: 8px; font-weight: bold; text-transform: uppercase; margin-top: 2px; letter-spacing: 0.3px; }
+        .btn-nav-lateral:active {
+            color: #000;
+        }
+
+        .btn-nav-lateral .icono {
+            font-size: 14px;
+            font-weight: bold;
+            line-height: 1;
+        }
+
+        .btn-nav-lateral .texto-pequeno {
+            font-size: 8px;
+            font-weight: bold;
+            text-transform: uppercase;
+            margin-top: 2px;
+            letter-spacing: 0.3px;
+        }
+
         .btn-ant { left: 6px; }
         .btn-sig { right: 6px; }
     </style>
@@ -242,17 +257,17 @@
                     <span class="texto-pequeno">Sig.</span>
                 </button>
                 
-                <!-- Botón Central Estructural Correcto -->
+                <!-- Botón Central Remapeado -->
                 <button id="btn-play-pausa" class="btn-play-central">▶</button>
             </div>
         </div>
 
-        <!-- Tus imágenes GIF organizadas exactamente en su sitio original -->
+        <!-- Tus imágenes GIF -->
         <img src="img/gif.gif" style="width: 130px; position: relative; transform: translate(10px, -330px);" alt="">
         <img src="img/gif1.gif" style="width: 120px; position: relative; transform: translate(135px, -200px);" alt="">
 
         <!-- ========================================================= -->
-        <!-- CONTADOR DE VISITAS PRIVADO INTEGRAL (AISLADO)            -->
+        <!-- CONTADOR DE VISITAS PRIVADO NATIVO                        -->
         <!-- ========================================================= -->
         <div id="contador-privado" style="display: none; font-family: sans-serif; font-size: 14px; color: #888; text-align: center; margin: 30px auto; padding: 10px; max-width: 300px; border-top: 1px dashed #444;">
           📊 Vistas totales (Modo Admin): <span id="numero-vistas-privado" style="font-weight: bold; color: #1db954;">0</span>
@@ -264,7 +279,7 @@
     <!-- Elemento de Audio NATIVO -->
     <audio id="mi-audio"></audio>
 
-    <!-- SCRIPT DEL REPRODUCTOR IPOD MINI (AISLADO) -->
+    <!-- SCRIPT DEL REPRODUCTOR IPOD MINI -->
     <script>
         const listaAudios = [
             "audio/sonido1.mp3",
@@ -282,6 +297,3 @@
         const barraProgreso = document.getElementById("barra-progreso");
         const tiempoActualTxt = document.getElementById("tiempo-actual");
         const tiempoTotalTxt = document.getElementById("tiempo-total");
-        const infoPista = document.getElementById("info-pista");
-
-        // Carga inicial de la primera pista
