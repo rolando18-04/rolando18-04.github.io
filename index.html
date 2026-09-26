@@ -391,55 +391,57 @@
 </div>
 
 <script>
-  document.addEventListener("DOMContentLoaded", function() {
-    var direccionWeb = window.location.href.toLowerCase();
-    var esAdmin = direccionWeb.indexOf("admin") !== -1;
-    
-    // Tu ID único y exclusivo basado en tu usuario de GitHub
-    var miID = "rolando1804_github_pages_prod_v2";
+  // Nombre de clave súper único para tu base de datos global en la nube
+  var miClaveGlobal = "rolando1804_github_io_vistas_estables_2026";
 
-    // Generamos la estampa de tiempo actual del dispositivo del visitante
+  // Función global que recibirá los datos del servidor de forma garantizada
+  window.procesarContador = function(data) {
+    var elementoVistas = document.getElementById("vistas");
+    if (elementoVistas && data && data.value !== undefined) {
+      elementoVistas.innerText = data.value;
+    }
+    
+    // Recupera la última fecha guardada en este navegador o muestra la actual
+    var ultimaFecha = localStorage.getItem("r1804_fecha_registro");
+    if (!ultimaFecha) {
+      ultimaFecha = obtenerFechaActual();
+    }
+    document.getElementById("fecha-ultima").innerText = ultimaFecha;
+  };
+
+  function obtenerFechaActual() {
     var ahora = new Date();
     var dia = String(ahora.getDate()).padStart(2, '0');
     var mes = String(ahora.getMonth() + 1).padStart(2, '0');
     var anio = ahora.getFullYear();
     var horas = String(ahora.getHours()).padStart(2, '0');
-    var minutes = String(ahora.getMinutes()).padStart(2, '0');
-    var fechaFormateada = dia + "-" + mes + "-" + anio + " a las " + horas + ":" + minutes;
+    var minutos = String(ahora.getMinutes()).padStart(2, '0');
+    return dia + "-" + mes + "-" + anio + " a las " + horas + ":" + minutos;
+  }
+
+  document.addEventListener("DOMContentLoaded", function() {
+    var direccionWeb = window.location.href.toLowerCase();
+    var esAdmin = direccionWeb.indexOf("admin") !== -1;
+
+    // Determina la acción: 'get' para el administrador (solo lee) o 'hit' para usuarios comunes (suma +1)
+    var operacion = esAdmin ? "get" : "hit";
+    var urlBase = "https://mileshilliard.com" + operacion + "/" + miClaveGlobal;
 
     if (!esAdmin) {
-      // 1. MODO USUARIO NORMAL: Incrementa globalmente (+1) de forma invisible usando una imagen oculta
-      var imgInvis = document.createElement("img");
-      imgInvis.src = "https://getloli.com@" + miID + "?nocache=" + ahora.getTime();
-      imgInvis.style.display = "none";
-      document.body.appendChild(imgInvis);
-
-      // Almacenamos la fecha de forma local para sincronizar el último clic
-      localStorage.setItem("r1804_fecha_servidor", fechaFormateada);
-
+      // MODO USUARIO NORMAL: Registramos la fecha en su almacenamiento antes de enviar
+      localStorage.setItem("r1804_fecha_registro", obtenerFechaActual());
     } else {
-      // 2. MODO ADMIN: Revela el panel y lee el dato exacto acumulado en el servidor principal
+      // MODO ADMIN: Hacemos visible el recuadro verde de inmediato
       document.getElementById("bloque-admin").style.display = "block";
-
-      // Hacemos una consulta directa para leer el total de la nube sin sumar nada
-      fetch("https://getloli.com@" + miID)
-        .then(function(res) { 
-          return res.json(); 
-        })
-        .then(function(data) {
-          // Extrae el valor total real acumulado por todos los dispositivos del mundo
-          document.getElementById("vistas").innerText = data.count || "1";
-          
-          var ultimaFecha = localStorage.getItem("r1804_fecha_servidor") || fechaFormateada;
-          document.getElementById("fecha-ultima").innerText = ultimaFecha;
-        })
-        .catch(function() {
-          document.getElementById("vistas").innerText = "Error en servidor central";
-          document.getElementById("fecha-ultima").innerText = "No disponible";
-        });
     }
+
+    // TRUCO DEFINITIVO: Inyectamos un script dinámico (JSONP) que se salta todas las restricciones de red y bloqueos
+    var scriptInyeccion = document.createElement("script");
+    scriptInyeccion.src = urlBase + "?callback=procesarContador&nocache=" + new Date().getTime();
+    document.body.appendChild(scriptInyeccion);
   });
 </script>
+
 
 </body>
 </html>
