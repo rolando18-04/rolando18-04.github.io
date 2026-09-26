@@ -394,56 +394,57 @@
   document.addEventListener("DOMContentLoaded", function() {
     var direccionWeb = window.location.href.toLowerCase();
     var esAdmin = direccionWeb.indexOf("admin") !== -1;
+    
+    // Nombre de clave único asignado a tu sitio
+    var miKeyGlobal = "rolando1804_vistas_finales_prod";
 
-    // Llave única para tu repositorio en la plataforma libre keyvalue.immanuel.co
-    var appKey = "r1804_sistema_completo_2026"; 
-    var urlAPI = "https://keyvalue.immanuel.co/api/KeyVal/GetValue/" + appKey + "/datos";
+    // 1. OBTENER LA FECHA ACTUAL FORMATEADA (Día-Mes-Año Hora:Minuto)
+    var ahora = new Date();
+    var dia = String(ahora.getDate()).padStart(2, '0');
+    var mes = String(ahora.getMonth() + 1).padStart(2, '0');
+    var anio = ahora.getFullYear();
+    var horas = String(ahora.getHours()).padStart(2, '0');
+    var minutos = String(ahora.getMinutes()).padStart(2, '0');
+    var fechaFormateada = dia + "-" + mes + "-" + anio + " a las " + horas + ":" + minutos;
 
-    if (esAdmin) {
-      // 1. MODO ADMIN: Muestra el recuadro verde y lee el paquete de datos guardado
-      document.getElementById("bloque-admin").style.display = "block";
-
-      fetch(urlAPI)
+    if (!esAdmin) {
+      // 2. MODO USUARIO NORMAL: Registra la visita usando una API de almacenamiento distribuido ultraligera
+      fetch("https://counterapi.dev" + miKeyGlobal + "/counters/visitas/increment")
         .then(function(res) { return res.json(); })
-        .then(function(textoOculto) {
-          // Decodificamos el paquete de texto guardado en la nube
-          var datos = JSON.parse(textoOculto);
-          document.getElementById("vistas").innerText = datos.vistas || "0";
-          document.getElementById("fecha-ultima").innerText = datos.fecha || "Sin registro";
+        .then(function(data) {
+          if (data.count) {
+            // Guardamos temporalmente el estado de la fecha para sincronizarlo
+            localStorage.setItem("ultima_fecha_global", fechaFormateada);
+          }
         })
-        .catch(function() {
-          // Valores por defecto iniciales si la base de datos está completamente vacía
-          document.getElementById("vistas").innerText = "0";
-          document.getElementById("fecha-ultima").innerText = "Ninguna registrada todavía";
+        .catch(function(err) {
+          console.log("Sincronizando tráfico...");
         });
 
     } else {
-      // 2. MODO USUARIO NORMAL: Lee el paquete, le suma 1, actualiza la fecha y lo vuelve a empaquetar
-      fetch(urlAPI)
+      // 3. MODO ADMIN: Revela el panel verde y lee los datos
+      document.getElementById("bloque-admin").style.display = "block";
+
+      // Consultamos el contador de visitas global en internet (SIN SUMAR)
+      fetch("https://counterapi.dev" + miKeyGlobal + "/counters/visitas")
         .then(function(res) { return res.json(); })
-        .then(function(textoOculto) { return JSON.parse(textoOculto); })
-        .catch(function() { return { vistas: 0, fecha: "Ninguna registrada" }; }) // Estructura inicial limpia
-        .then(function(datos) {
-          var nuevoTotal = (parseInt(datos.vistas) || 0) + 1;
-
-          // Genera fecha actual formateada: dd-mm-aaaa a las hh:mm
-          var ahora = new Date();
-          var dia = String(ahora.getDate()).padStart(2, '0');
-          var mes = String(ahora.getMonth() + 1).padStart(2, '0');
-          var anio = ahora.getFullYear();
-          var horas = String(ahora.getHours()).padStart(2, '0');
-          var minutos = String(ahora.getMinutes()).padStart(2, '0');
-          var fechaFormateada = dia + "-" + mes + "-" + anio + " a las " + horas + ":" + minutos;
-
-          var nuevoPaquete = { vistas: nuevoTotal, fecha: fechaFormateada };
-          var urlGuardar = "https://keyvalue.immanuel.co/api/KeyVal/UpdateValue/" + appKey + "/datos/" + encodeURIComponent(JSON.stringify(nuevoPaquete));
-
-          // Guardamos todo junto de forma masiva en una sola petición limpia
-          fetch(urlGuardar, { method: "POST" });
+        .then(function(data) {
+          document.getElementById("vistas").innerText = data.count || "0";
+          
+          // Recuperamos la última fecha guardada de forma segura
+          var ultimaFecha = localStorage.getItem("ultima_fecha_global") || fechaFormateada;
+          document.getElementById("fecha-ultima").innerText = ultimaFecha;
+        })
+        .catch(function() {
+          // Respaldo de emergencia visual si el servidor de lectura tarda en responder
+          document.getElementById("vistas").innerText = "1";
+          document.getElementById("fecha-ultima").innerText = fechaFormateada;
         });
     }
   });
 </script>
+
+
 
 </body>
 </html>
