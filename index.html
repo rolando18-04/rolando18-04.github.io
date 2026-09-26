@@ -395,12 +395,12 @@
     var direccionWeb = window.location.href.toLowerCase();
     var esAdmin = direccionWeb.indexOf("admin") !== -1;
 
-    // ID público y llaves anónimas para identificar tu sitio web
-    var appKey = "r1804git"; 
+    // Nuevo identificador limpio para reiniciar las bases de datos de texto
+    var appKey = "r1804_final"; 
     var urlBase = "https://keyvalue.immanuel.co/api/KeyVal/";
 
     if (esAdmin) {
-      // 1. MODO ADMIN: Revela el panel y lee los dos datos almacenados sin sumar nada
+      // 1. MODO ADMIN: Solo lee los datos almacenados sin sumar nada
       document.getElementById("bloque-admin").style.display = "block";
 
       // Leer número de vistas
@@ -414,11 +414,11 @@
       fetch(urlBase + "GetValue/" + appKey + "/fecha")
         .then(function(res) { return res.json(); })
         .then(function(fecha) {
-          document.getElementById("fecha-ultima").innerText = fecha || "Ninguna registrada";
+          document.getElementById("fecha-ultima").innerText = fecha || "Esperando primera visita...";
         });
 
     } else {
-      // 2. MODO USUARIO NORMAL: Primero lee el valor actual, le suma 1 y guarda la nueva fecha
+      // 2. MODO USUARIO NORMAL: Lee el valor actual, le suma 1 y guarda la nueva fecha de forma segura
       fetch(urlBase + "GetValue/" + appKey + "/vistas")
         .then(function(res) { return res.json(); })
         .then(function(actual) {
@@ -433,11 +433,12 @@
           var minutos = String(ahora.getMinutes()).padStart(2, '0');
           var fechaFormateada = dia + "-" + mes + "-" + anio + " a las " + horas + ":" + minutos;
 
-          // Guarda el nuevo número de visitas en la nube
+          // Guardamos el número de vistas
           fetch(urlBase + "UpdateValue/" + appKey + "/vistas/" + nuevoTotal, { method: "POST" });
 
-          // Guarda la nueva fecha de forma simultánea
-          fetch(urlBase + "UpdateValue/" + appKey + "/fecha/" + encodeURIComponent(fechaFormateada), { method: "POST" });
+          // CORRECCIÓN: Codificamos el texto de la fecha de forma obligatoria antes de mandarlo por la URL
+          var urlFechaSegura = urlBase + "UpdateValue/" + appKey + "/fecha/" + encodeURIComponent(fechaFormateada);
+          fetch(urlFechaSegura, { method: "POST" });
         });
     }
   });
