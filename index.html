@@ -1,39 +1,71 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://googletagmanager.com"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-PNGP608PG5');
-    </script>
+  <!-- Google tag (gtag.js) -->
+<script async src="https://googletagmanager.com"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
 
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rolando</title>
+  gtag('config', 'G-PNGP608PG5');
+</script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rolando</title>
+  <style>
+    body {
+      /* Elimina los márgenes por defecto */
+      margin: 0;
+      padding: 0;
+      
+      /* Obliga al fondo a medir toda la altura de la pantalla */
+      min-height: 100vh; 
+      
+      /* Configuración de la imagen de fondo */
+      background-image: url('img/img.png');
+      background-repeat: no-repeat;
+      background-position: center center;
+      background-size: cover;
+      background-attachment: fixed;
+    }
+
+    /* Si quieres que tu contenido tenga un ancho fijo de 730px, */
+    /* es mejor usar un contenedor dentro del body */
+    .contenido-principal {
+      max-width: 730px;
+      margin: 0 auto; /* Centra el contenido sobre el fondo */
+      padding: 20px;
+    }
+  </style>
+</head>
+ 
+<center>
+<h1 style="color:#DEDEF7; font-size: 40px;">Hola Mundo</h1>
+</center>
+
+<!-- Agregamos la función onclick a tu nombre nativo -->
+<center>
+<h2 style="color:#DEDEF7; font-size: 30px; cursor: pointer; user-select: none;" onclick="alternarVisibilidadVistas()">Rolando</h2>
+</center>
+
+<center>
+<p style="color:#DEDEF7; font-size: 18px; margin-right: 280px">En caso de que no los vea, Buenos dias, Buenas tardes y Buenas noches...</p>   
+</center>
+
+<p style="color:#DEDEF7; font-size: 18px; margin-right 30px">Dale play y disfruta...</p>
+
     
+
+
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>iPod Mini Player - Aluminio Unificado</title>
     <style>
-        body {
-            margin: 0;
-            padding: 0;
-            min-height: 100vh; 
-            background-image: url('img/img.png');
-            background-repeat: no-repeat;
-            background-position: center center;
-            background-size: cover;
-            background-attachment: fixed;
-        }
-
-        .contenido-principal {
-            max-width: 730px;
-            margin: 0 auto; 
-            padding: 20px;
-            position: relative;
-        }
-
-        /* Cuerpo del iPod Mini */
+        /* Cuerpo del iPod Mini con tamaño y posición */
         .ipod-mini {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             background: linear-gradient(135deg, #3A3D40 0%, #181A1B 100%);
@@ -48,6 +80,8 @@
             gap: 25px;
             user-select: none;
             border: 1px solid #111;
+
+            /* Ubicación y Tamaño */
             margin: 4px;            
             transform: scale(0.5);        
             transform-origin: top left; 
@@ -209,80 +243,52 @@
 
         .btn-ant { left: 6px; }
         .btn-sig { right: 6px; }
-
-        /* Estilo sutil para tu nombre que funciona como botón secreto */
-        .nombre-secreto {
-            color: #DEDEF7;
-            font-size: 30px;
-            cursor: pointer;
-            user-select: none;
-        }
-
-        /* Contador ultra discreto: números pequeños y tono gris oscuro */
-        #contador-invisible {
-            display: none;
-            font-size: 11px;
-            color: #555566;
-            margin-top: 15px;
-        }
     </style>
 </head>
 <body>
 
-    <div class="contenido-principal">
-        <center>
-            <h1 style="color:#DEDEF7; font-size: 40px;">Hola Mundo</h1>
+    <!-- Contenedor iPod Mini -->
+    <div class="ipod-mini">
+        
+        <!-- Pantalla LCD -->
+        <div class="pantalla-lcd">
+            <div id="info-pista" class="info-pista">Audio 1</div>
             
-            <!-- Tu nombre ahora es el botón secreto que no altera la estructura visual -->
-            <h2 class="nombre-secreto" onclick="revelarVistas()">Rolando</h2>
-            
-            <p style="color:#DEDEF7; font-size: 18px; margin-right: 280px">En caso de que no los vea, Buenos dias, Buenas tardes y Buenas noches...</p>   
-        </center>
-
-        <p style="color:#DEDEF7; font-size: 18px; margin-right: 30px">Dale play y disfruta...</p>
-
-        <!-- Contenedor iPod Mini -->
-        <div class="ipod-mini">
-            <div class="pantalla-lcd">
-                <div id="info-pista" class="info-pista">Audio 1</div>
-                <div class="progreso-contenedor">
-                    <input type="range" id="barra-progreso" class="barra-progreso" value="0" min="0" max="100" step="0.1">
-                </div>
-                <div class="tiempos">
-                    <span id="tiempo-actual">0:00</span>
-                    <span id="tiempo-total">0:00</span>
-                </div>
+            <div class="progreso-contenedor">
+                <input type="range" id="barra-progreso" class="barra-progreso" value="0" min="0" max="100" step="0.1">
             </div>
 
-            <div class="click-wheel">
-                <span class="btn-menu">MENU</span>
-                <button id="btn-anterior" class="btn-nav-lateral btn-ant">
-                    <span class="icono">◀◀</span>
-                    <span class="texto-pequeno">Ant.</span>
-                </button>
-                <button id="btn-siguiente" class="btn-nav-lateral btn-sig">
-                    <span class="icono">▶▶</span>
-                    <span class="texto-pequeno">Sig.</span>
-                </button>
-                <button id="btn-play-pausa" class="btn-play-central">▶</button>
+            <div class="tiempos">
+                <span id="tiempo-actual">0:00</span>
+                <span id="tiempo-total">0:00</span>
             </div>
         </div>
 
-        <!-- Tus imágenes GIF -->
-        <img src="img/gif.gif" style="width: 130px; position: relative; transform: translate(10px, -330px);" alt="">
-        <img src="img/gif1.gif" style="width: 120px; position: relative; transform: translate(135px, -200px);" alt="">
+        <!-- Rueda de Clics -->
+        <div class="click-wheel">
+            <span class="btn-menu">MENU</span>
+            
+            <!-- Botón Anterior -->
+            <button id="btn-anterior" class="btn-nav-lateral btn-ant">
+                <span class="icono">◀◀</span>
+                <span class="texto-pequeno">Ant.</span>
+            </button>
 
-        <!-- Solo números en un diseño diminuto y apagado -->
-        <center>
-            <div id="contador-invisible">
-                vistas: <span id="vistas-numero">0</span>
-            </div>
-        </center>
+            <!-- Botón Siguiente -->
+            <button id="btn-siguiente" class="btn-nav-lateral btn-sig">
+                <span class="icono">▶▶</span>
+                <span class="texto-pequeno">Sig.</span>
+            </button>
+            
+            <!-- Tu botón central nativo intacto -->
+            <button id="btn-play-pausa" class="btn-play-central">▶</button>
+        </div>
+
     </div>
 
+    <!-- Elemento de Audio NATIVO -->
     <audio id="mi-audio"></audio>
 
-    <!-- SCRIPT DEL REPRODUCTOR IPOD MINI -->
     <script>
         const listaAudios = [
             "audio/sonido1.mp3",
@@ -308,3 +314,18 @@
         btnPlayPausa.addEventListener("click", () => {
             if (reproductor.paused) {
                 reproductor.play()
+                    .then(() => btnPlayPausa.textContent = "||")
+                    .catch(err => console.log("Error al reproducir: ", err));
+            } else {
+                reproductor.pause();
+                btnPlayPausa.textContent = "▶";
+            }
+        });
+
+        btnSiguiente.addEventListener("click", () => {
+            indiceActual = (indiceActual + 1) % listaAudios.length;
+            cambiarPista(indiceActual);
+        });
+
+
+        
