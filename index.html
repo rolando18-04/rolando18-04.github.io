@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
   <!-- Google tag (gtag.js) -->
-<script async src="https://googletagmanager.com"></script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PNGP608PG5"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
@@ -44,9 +44,8 @@
 <h1 style="color:#DEDEF7; font-size: 40px;">Hola Mundo</h1>
 </center>
 
-<!-- Agregamos la función onclick a tu nombre nativo -->
 <center>
-<h2 style="color:#DEDEF7; font-size: 30px; cursor: pointer; user-select: none;" onclick="alternarVisibilidadVistas()">Rolando</h2>
+<h2 style="color:#DEDEF7; font-size: 30px">Rolando</h2>
 </center>
 
 <center>
@@ -280,7 +279,7 @@
                 <span class="texto-pequeno">Sig.</span>
             </button>
             
-            <!-- Tu botón central nativo intacto -->
+            <!-- Botón de Play/Pausa -->
             <button id="btn-play-pausa" class="btn-play-central">▶</button>
         </div>
 
@@ -327,5 +326,95 @@
             cambiarPista(indiceActual);
         });
 
+        btnAnterior.addEventListener("click", () => {
+            indiceActual = (indiceActual - 1 + listaAudios.length) % listaAudios.length;
+            cambiarPista(indiceActual);
+        });
 
+        function cambiarPista(indice) {
+            reproductor.src = listaAudios[indice];
+            reproductor.load();
+            actualizarTextoPista();
+            reproductor.play()
+                .then(() => btnPlayPausa.textContent = "||")
+                .catch(() => btnPlayPausa.textContent = "▶");
+        }
+
+        function actualizarTextoPista() {
+            infoPista.textContent = `Audio ${indiceActual + 1}`;
+        }
+
+        function formatearTiempo(segundos) {
+            if (isNaN(segundos)) return "0:00";
+            const min = Math.floor(segundos / 60);
+            const seg = Math.floor(segundos % 60);
+            return `${min}:${seg < 10 ? '0' : ''}${seg}`;
+        }
+
+        reproductor.addEventListener("timeupdate", () => {
+            if (reproductor.duration) {
+                const porcentaje = (reproductor.currentTime / reproductor.duration) * 100;
+                barraProgreso.value = porcentaje;
+                tiempoActualTxt.textContent = formatearTiempo(reproductor.currentTime);
+            }
+        });
+
+        reproductor.addEventListener("loadedmetadata", () => {
+            tiempoTotalTxt.textContent = formatearTiempo(reproductor.duration);
+        });
+
+        barraProgreso.addEventListener("input", () => {
+            if (reproductor.duration) {
+                const nuevoTiempo = (barraProgreso.value / 100) * reproductor.duration;
+                reproductor.currentTime = nuevoTiempo;
+            }
+        });
+
+        reproductor.addEventListener("ended", () => {
+            btnSiguiente.click();
+        });
+    </script>
+</body>
+</html>
+
+<img src="img/gif.gif" style="width: 130px; position: relative; transform: translate(10px, -330px);" alt="">
+
+
+<img src="img/gif1.gif" style="width: 120px; position: relative; transform: translate(135px, -200px);" alt="">
+
+<div id="contador-privado" style="display: none; font-family: sans-serif; font-size: 14px; color: #888; text-align: center; margin: 30px auto; padding: 10px; max-width: 300px; border-top: 1px dashed #444;">
+  📊 Vistas totales (Modo Admin): <span id="numero-vistas-privado" style="font-weight: bold; color: #1db954;">...</span>
+</div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    // Generamos una clave única basada en tu sitio de GitHub para que cuente tus visitas reales
+    const sitioClave = 'rolando18_04_github_io_vistas';
+    
+    // Hacemos la petición a una API de conteo real que suma +1 en cada recarga
+    fetch(`https://moondb.xyz{sitioClave}/hit`)
+      .then(response => {
+        if (!response.ok) throw new Error('Error en respuesta de servidor');
+        return response.json();
+      })
+      .then(data => {
+        // Asigna el número acumulado al elemento HTML en base a la respuesta del servidor
+        // Nota: Si la API devuelve un formato plano o estructurado, lo aseguramos aquí:
+        const totalVistas = data.value || data.count || data;
+        document.getElementById("numero-vistas-privado").innerText = totalVistas;
         
+        // Verifica de manera 100% privada si en la barra de direcciones pusiste ?adminrola
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.has('adminrola')) {
+          document.getElementById("contador-privado").style.display = "block";
+        }
+      })
+      .catch(err => {
+        console.error("Error al cargar el contador:", err);
+        document.getElementById("numero-vistas-privado").innerText = "Error";
+      });
+  });
+</script>
+
+</body>
+</html>
