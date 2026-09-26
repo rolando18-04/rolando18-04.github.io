@@ -383,7 +383,7 @@
 <img src="img/gif1.gif" style="width: 120px; position: relative; transform: translate(135px, -200px);" alt="">
 
 
-<!-- Bloque Admin -->
+<!-- Bloque Admin: Muestra tus visitas totales en internet -->
 <div id="bloque-admin" style="display: none; background: #000000; color: #00ff00; padding: 15px; margin: 20px 0; border-radius: 8px; border: 2px solid #00ff00; font-family: monospace; text-align: center; font-size: 1.1em;">
   📊 MODO ADMIN ACTIVADO <br>
   Vistas totales: <strong id="vistas">Cargando...</strong>
@@ -391,24 +391,24 @@
 
 <script>
   document.addEventListener("DOMContentLoaded", function() {
-    // Usamos el servidor global de counterapi.dev de forma directa y abierta
+    // Usamos la API V2 actualizada de CounterAPI para evitar bloqueos
     var urlContador = "https://counterapi.dev";
 
-    // Hacemos una consulta simple para sumarle 1 y traer el total real de la nube
+    // 1. Conectamos a la API para incrementar la vista y traer el valor real
     fetch(urlContador)
       .then(function(res) { 
         return res.json(); 
       })
-      .then(function(data) {
+      .then(function(response) {
         var elementoVistas = document.getElementById("vistas");
-        if (elementoVistas && data.count) {
-          // Imprime el número real guardado en internet
-          elementoVistas.innerText = data.count; 
+        // La API V2 entrega el número dentro de la propiedad .v2.count o .count directamente
+        if (elementoVistas && response.count) {
+          elementoVistas.innerText = response.count; 
         }
       })
       .catch(function(err) {
-        console.warn("Fallo de red externa, activando memoria local de emergencia.");
-        // Respaldo por si te quedas sin internet
+        console.warn("Fallo de API, usando memoria local de respaldo:", err);
+        // Si hay un bloqueo del navegador, sigue usando la memoria de respaldo
         var visitasLocales = localStorage.getItem("vistas_respaldo") || "0";
         visitasLocales = Number(visitasLocales) + 1;
         localStorage.setItem("vistas_respaldo", visitasLocales);
@@ -419,7 +419,7 @@
         }
       });
 
-    // ACTIVACIÓN POR DIRECCIÓN WEB (URL)
+    // 2. ACTIVACIÓN POR DIRECCIÓN WEB (URL)
     var direccionWeb = window.location.href.toLowerCase();
     if (direccionWeb.indexOf("admin") !== -1) {
       var panelAdmin = document.getElementById("bloque-admin");
@@ -429,7 +429,6 @@
     }
   });
 </script>
-
 
 </body>
 </html>
