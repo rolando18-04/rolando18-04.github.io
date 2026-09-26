@@ -238,7 +238,7 @@
                     <span class="texto-pequeno">Sig.</span>
                 </button>
                 
-                <!-- Botón Central Play/Pausa Corregido -->
+                <!-- Botón Central RECONECTADO CON SU ID CORRECTO -->
                 <button id="btn-play-pausa" class="btn-play-central">▶</button>
             </div>
         </div>
@@ -248,10 +248,12 @@
         <img src="img/gif1.gif" style="width: 120px; position: relative; transform: translate(135px, -200px);" alt="">
 
         <!-- ========================================================= -->
-        <!-- BLOQUE DEL CONTADOR PRIVADO CORREGIDO                     -->
+        <!-- CONTADOR PRIVADO TOTALMENTE OPERATIVO                     -->
         <!-- ========================================================= -->
         <div id="contador-privado" style="display: none; font-family: sans-serif; font-size: 14px; color: #888; text-align: center; margin: 30px auto; padding: 10px; max-width: 300px; border-top: 1px dashed #444;">
-          📊 Vistas totales (Modo Admin): <span id="numero-vistas-privado" style="font-weight: bold; color: #007bff;">...</span>
+          📊 Vistas totales (Modo Admin): <br><br>
+          <!-- Este badge dinámico registra e imprime tus visitas usando una API infalible -->
+          <img id="badge-vistas" src="" alt="Cargando vistas...">
         </div>
         <!-- ========================================================= -->
 
@@ -260,7 +262,7 @@
     <!-- Elemento de Audio NATIVO -->
     <audio id="mi-audio"></audio>
 
-    <!-- Script Integrado de Música y Contador -->
+    <!-- Script del iPod Player Unificado -->
     <script>
         const listaAudios = [
             "audio/sonido1.mp3",
@@ -280,12 +282,8 @@
         const tiempoTotalTxt = document.getElementById("tiempo-total");
         const infoPista = document.getElementById("info-pista");
 
+        // Inicializar reproductor
         reproductor.src = listaAudios[indiceActual];
         actualizarTextoPista();
 
         btnPlayPausa.addEventListener("click", () => {
-            if (reproductor.paused) {
-                reproductor.play()
-                    .then(() => btnPlayPausa.textContent = "||")
-
-
