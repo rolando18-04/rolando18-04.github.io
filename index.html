@@ -238,22 +238,20 @@
                     <span class="texto-pequeno">Sig.</span>
                 </button>
                 
-                <!-- Botón Central RECONECTADO CON SU ID CORRECTO -->
+                <!-- Botón Central RECONECTADO -->
                 <button id="btn-play-pausa" class="btn-play-central">▶</button>
             </div>
         </div>
 
-        <!-- Tus imágenes GIF organizadas -->
+        <!-- Tus imágenes GIF -->
         <img src="img/gif.gif" style="width: 130px; position: relative; transform: translate(10px, -330px);" alt="">
         <img src="img/gif1.gif" style="width: 120px; position: relative; transform: translate(135px, -200px);" alt="">
 
         <!-- ========================================================= -->
-        <!-- CONTADOR PRIVADO TOTALMENTE OPERATIVO                     -->
+        <!-- CONTADOR PRIVADO INTEGRAL (NATIVO)                        -->
         <!-- ========================================================= -->
         <div id="contador-privado" style="display: none; font-family: sans-serif; font-size: 14px; color: #888; text-align: center; margin: 30px auto; padding: 10px; max-width: 300px; border-top: 1px dashed #444;">
-          📊 Vistas totales (Modo Admin): <br><br>
-          <!-- Este badge dinámico registra e imprime tus visitas usando una API infalible -->
-          <img id="badge-vistas" src="" alt="Cargando vistas...">
+          📊 Vistas totales (Modo Admin): <span id="numero-vistas-privado" style="font-weight: bold; color: #1db954;">0</span>
         </div>
         <!-- ========================================================= -->
 
@@ -287,3 +285,4 @@
         actualizarTextoPista();
 
         btnPlayPausa.addEventListener("click", () => {
+            if (reproductor.paused) {
