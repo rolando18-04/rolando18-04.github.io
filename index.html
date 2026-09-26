@@ -395,34 +395,36 @@
     var direccionWeb = window.location.href.toLowerCase();
     var esAdmin = direccionWeb.indexOf("admin") !== -1;
 
-    // Nuevo identificador limpio para reiniciar las bases de datos de texto
-    var appKey = "r1804_final"; 
-    var urlBase = "https://keyvalue.immanuel.co/api/KeyVal/";
+    // Llave única para tu repositorio en la plataforma libre keyvalue.immanuel.co
+    var appKey = "r1804_sistema_completo_2026"; 
+    var urlAPI = "https://keyvalue.immanuel.co/api/KeyVal/GetValue/" + appKey + "/datos";
 
     if (esAdmin) {
-      // 1. MODO ADMIN: Solo lee los datos almacenados sin sumar nada
+      // 1. MODO ADMIN: Muestra el recuadro verde y lee el paquete de datos guardado
       document.getElementById("bloque-admin").style.display = "block";
 
-      // Leer número de vistas
-      fetch(urlBase + "GetValue/" + appKey + "/vistas")
+      fetch(urlAPI)
         .then(function(res) { return res.json(); })
-        .then(function(vistas) {
-          document.getElementById("vistas").innerText = vistas || "0";
-        });
-
-      // Leer última fecha
-      fetch(urlBase + "GetValue/" + appKey + "/fecha")
-        .then(function(res) { return res.json(); })
-        .then(function(fecha) {
-          document.getElementById("fecha-ultima").innerText = fecha || "Esperando primera visita...";
+        .then(function(textoOculto) {
+          // Decodificamos el paquete de texto guardado en la nube
+          var datos = JSON.parse(textoOculto);
+          document.getElementById("vistas").innerText = datos.vistas || "0";
+          document.getElementById("fecha-ultima").innerText = datos.fecha || "Sin registro";
+        })
+        .catch(function() {
+          // Valores por defecto iniciales si la base de datos está completamente vacía
+          document.getElementById("vistas").innerText = "0";
+          document.getElementById("fecha-ultima").innerText = "Ninguna registrada todavía";
         });
 
     } else {
-      // 2. MODO USUARIO NORMAL: Lee el valor actual, le suma 1 y guarda la nueva fecha de forma segura
-      fetch(urlBase + "GetValue/" + appKey + "/vistas")
+      // 2. MODO USUARIO NORMAL: Lee el paquete, le suma 1, actualiza la fecha y lo vuelve a empaquetar
+      fetch(urlAPI)
         .then(function(res) { return res.json(); })
-        .then(function(actual) {
-          var nuevoTotal = (parseInt(actual) || 0) + 1;
+        .then(function(textoOculto) { return JSON.parse(textoOculto); })
+        .catch(function() { return { vistas: 0, fecha: "Ninguna registrada" }; }) // Estructura inicial limpia
+        .then(function(datos) {
+          var nuevoTotal = (parseInt(datos.vistas) || 0) + 1;
 
           // Genera fecha actual formateada: dd-mm-aaaa a las hh:mm
           var ahora = new Date();
@@ -433,12 +435,11 @@
           var minutos = String(ahora.getMinutes()).padStart(2, '0');
           var fechaFormateada = dia + "-" + mes + "-" + anio + " a las " + horas + ":" + minutos;
 
-          // Guardamos el número de vistas
-          fetch(urlBase + "UpdateValue/" + appKey + "/vistas/" + nuevoTotal, { method: "POST" });
+          var nuevoPaquete = { vistas: nuevoTotal, fecha: fechaFormateada };
+          var urlGuardar = "https://keyvalue.immanuel.co/api/KeyVal/UpdateValue/" + appKey + "/datos/" + encodeURIComponent(JSON.stringify(nuevoPaquete));
 
-          // CORRECCIÓN: Codificamos el texto de la fecha de forma obligatoria antes de mandarlo por la URL
-          var urlFechaSegura = urlBase + "UpdateValue/" + appKey + "/fecha/" + encodeURIComponent(fechaFormateada);
-          fetch(urlFechaSegura, { method: "POST" });
+          // Guardamos todo junto de forma masiva en una sola petición limpia
+          fetch(urlGuardar, { method: "POST" });
         });
     }
   });
