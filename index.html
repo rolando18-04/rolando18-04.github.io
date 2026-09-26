@@ -383,7 +383,7 @@
 <img src="img/gif1.gif" style="width: 120px; position: relative; transform: translate(135px, -200px);" alt="">
 
 
-<!-- Bloque Admin: AHORA VISIBLE POR DEFECTO -->
+<!-- Bloque Admin: Muestra estadísticas completas en tiempo real -->
 <div id="bloque-admin" style="background: #000000; color: #00ff00; padding: 15px; margin: 20px 0; border-radius: 8px; border: 2px solid #00ff00; font-family: monospace; text-align: center; font-size: 1.1em; line-height: 1.6em;">
   📊 MODO ADMIN ACTIVADO <br>
   Vistas totales globales: <strong id="vistas">Cargando...</strong> <br>
@@ -391,23 +391,8 @@
 </div>
 
 <script>
-  // Nombre de clave súper único para tu base de datos global en la nube
+  // Nombre de clave único para guardar tus datos de forma segura
   var miClaveGlobal = "rolando1804_github_io_vistas_estables_2026";
-
-  window.procesarContador = function(data) {
-    var elementoVistas = document.getElementById("vistas");
-    if (elementoVistas && data && data.value !== undefined) {
-      elementoVistas.innerText = data.value;
-    } else {
-      document.getElementById("vistas").innerText = "Error de datos";
-    }
-    
-    var ultimaFecha = localStorage.getItem("r1804_fecha_registro");
-    if (!ultimaFecha) {
-      ultimaFecha = obtenerFechaActual();
-    }
-    document.getElementById("fecha-ultima").innerText = ultimaFecha;
-  };
 
   function obtenerFechaActual() {
     var ahora = new Date();
@@ -420,24 +405,43 @@
   }
 
   document.addEventListener("DOMContentLoaded", function() {
-    // CAMBIO: Ahora siempre usará 'hit' para contar la visita y mostrar el bloque simultáneamente
-    var urlBase = "https://mileshilliard.com" + miClaveGlobal;
+    // CORRECCIÓN 1: Se usa la URL oficial correcta incluyendo /api/v1/hit/
+    var urlBase = "https://countapi.mileshilliard.com/api/v1/hit/" + miClaveGlobal;
 
-    // Registramos la fecha localmente para el usuario actual
+    // Recuperamos y mostramos la última fecha guardada antes de actualizarla
+    var ultimaFecha = localStorage.getItem("r1804_fecha_registro");
+    if (!ultimaFecha) {
+      ultimaFecha = obtenerFechaActual();
+    }
+    document.getElementById("fecha-ultima").innerText = ultimaFecha;
+
+    // Guardamos la nueva fecha de acceso actual en el dispositivo del usuario
     localStorage.setItem("r1804_fecha_registro", obtenerFechaActual());
 
-    // Inyectamos el script dinámico (JSONP)
-    var scriptInyeccion = document.createElement("script");
-    scriptInyeccion.src = urlBase + "?callback=procesarContador&nocache=" + new Date().getTime();
-    
-    scriptInyeccion.onerror = function() {
-      document.getElementById("vistas").innerText = "Error de conexión";
-      document.getElementById("fecha-ultima").innerText = "No disponible";
-    };
-    
-    document.body.appendChild(scriptInyeccion);
+    // CORRECCIÓN 2: Conexión nativa limpia mediante FETCH (soportada por el servidor)
+    fetch(urlBase)
+      .then(function(response) {
+        if (!response.ok) {
+          throw new Error("Respuesta inválida del servidor");
+        }
+        return response.json();
+      })
+      .then(function(data) {
+        var elementoVistas = document.getElementById("vistas");
+        if (elementoVistas && data && data.value !== undefined) {
+          // El servidor devuelve el número en la propiedad .value
+          elementoVistas.innerText = data.value;
+        } else {
+          document.getElementById("vistas").innerText = "Error de formato";
+        }
+      })
+      .catch(function(error) {
+        console.error("Detalle del error:", error);
+        document.getElementById("vistas").innerText = "Error de conexión";
+      });
   });
 </script>
+
 
 
 </body>
