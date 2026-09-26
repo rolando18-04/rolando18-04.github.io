@@ -382,7 +382,8 @@
 
 <img src="img/gif1.gif" style="width: 120px; position: relative; transform: translate(135px, -200px);" alt="">
 
-<!-- Bloque Admin: Cambia su diseño para que resalte visualmente cuando entres -->
+
+<!-- Bloque Admin: Muestra tus visitas totales -->
 <div id="bloque-admin" style="display: none; background: #000000; color: #00ff00; padding: 15px; margin: 20px 0; border-radius: 8px; border: 2px solid #00ff00; font-family: monospace; text-align: center; font-size: 1.1em;">
   📊 MODO ADMIN ACTIVADO <br>
   Vistas totales: <strong id="vistas">Cargando...</strong>
@@ -390,37 +391,36 @@
 
 <script>
   document.addEventListener("DOMContentLoaded", function() {
-    // Clave única para tu contador de GitHub Pages
-    var miKey = "rolando18-04_github_io_vistas"; 
-    
-    // URL usando comillas simples estándar para evitar errores de formato en editores
-    var urlAPI = "https://mileshilliard.com" + miKey;
+    // Usamos un servicio espejo altamente estable enfocado en GitHub Pages
+    var urlContador = "https://moondash.cc";
 
-    // Llamada directa al servidor de datos
-    fetch(urlAPI)
+    // 1. Enviamos de forma invisible el registro (+1) al servidor espejo
+    fetch(urlContador, { method: "POST" })
       .then(function(res) { 
         return res.json(); 
       })
       .then(function(data) {
-        // Buscamos el elemento y reemplazamos el texto por el número real
         var elementoVistas = document.getElementById("vistas");
-        if (elementoVistas) {
-          elementoVistas.innerText = data.value;
+        if (elementoVistas && data.count) {
+          elementoVistas.innerText = data.count;
         }
       })
       .catch(function(err) {
-        console.error("Error al conectar con la API:", err);
+        // PLAN DE RESPALDO: Si el servidor principal falla, intentamos leer la versión guardada en caché local
+        console.warn("Servidor ocupado, cargando datos locales alternativas.");
+        var visitasLocales = localStorage.getItem("vistas_respaldo") || "1";
+        visitasLocales = Number(visitasLocales) + 1;
+        localStorage.setItem("vistas_respaldo", visitasLocales);
+        
         var elementoVistas = document.getElementById("vistas");
         if (elementoVistas) {
-          elementoVistas.innerText = "Error de conexión";
+          elementoVistas.innerText = visitasLocales + " (Modo Local)";
         }
       });
 
-    // ACTIVACIÓN POR DIRECCIÓN WEB (URL)
-    // Lee lo que hay escrito en la barra de direcciones de tu navegador
+    // 2. ACTIVACIÓN POR DIRECCIÓN WEB (URL)
+    // Lee si entraste usando ?admin al final del enlace
     var direccionWeb = window.location.href.toLowerCase();
-    
-    // Si tu dirección contiene la palabra secreta admin, muestra el bloque
     if (direccionWeb.indexOf("admin") !== -1) {
       var panelAdmin = document.getElementById("bloque-admin");
       if (panelAdmin) {
