@@ -382,6 +382,39 @@
 
 <img src="img/gif1.gif" style="width: 120px; position: relative; transform: translate(135px, -200px);" alt="">
 
+
+<!-- El contenedor inicia totalmente invisible para tus visitantes -->
+<div id="contador-privado" style="display: none; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; font-size: 14px; color: #888; text-align: center; margin: 30px auto; padding: 10px; max-width: 300px; border-top: 1px dashed #444;">
+  📊 Vistas totales (Modo Admin): <span id="numero-vistas-privado" style="font-weight: bold; color: #007bff;">...</span>
+</div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    // Configuración automática para tu repositorio rolando18-04.github.io
+    const namespace = "rolando18-04.github.io"; 
+    const key = "rolando18-04.github.io.main";
+
+    // Registra la vista de manera silenciosa en el servidor con cada recarga
+    fetch(`https://mileshilliard.com{namespace}/${key}`)
+      .then(response => response.json())
+      .then(data => {
+        // Asigna el número acumulado de impresiones al elemento HTML
+        document.getElementById("numero-vistas-privado").innerText = data.value;
+        
+        // Verifica si la URL del navegador contiene exactamente la palabra ?adminrola
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.has('adminrola')) {
+          // Revela el bloque del contador solo si el parámetro existe
+          document.getElementById("contador-privado").style.display = "block";
+        }
+      })
+      .catch(err => {
+        console.error("Error al cargar el contador:", err);
+      });
+  });
+</script>
+
+
 </body>
 </html>
 
