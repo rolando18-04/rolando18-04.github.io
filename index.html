@@ -12,7 +12,7 @@
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rolando - iPod Mini Player</title>
+    <title>Rolando</title>
     
     <style>
         body {
@@ -130,7 +130,7 @@
             border: 1px solid #A8A8A8;
         }
 
-        /* Botones del iPod */
+        /* Botón Central Play/Pausa */
         .btn-play-central {
             position: absolute;
             top: 50%;
@@ -238,20 +238,20 @@
                     <span class="texto-pequeno">Sig.</span>
                 </button>
                 
-                <!-- Botón Central Play/Pausa -->
+                <!-- Botón Central Play/Pausa Corregido -->
                 <button id="btn-play-pausa" class="btn-play-central">▶</button>
             </div>
         </div>
 
-        <!-- Tus imágenes GIF organizadas estructuralmente -->
+        <!-- Tus imágenes GIF organizadas -->
         <img src="img/gif.gif" style="width: 130px; position: relative; transform: translate(10px, -330px);" alt="">
         <img src="img/gif1.gif" style="width: 120px; position: relative; transform: translate(135px, -200px);" alt="">
 
         <!-- ========================================================= -->
-        <!-- TU BLOQUE DE CONTADOR PRIVADO CON LA NUEVA API CORREGIDA  -->
+        <!-- BLOQUE DEL CONTADOR PRIVADO CORREGIDO                     -->
         <!-- ========================================================= -->
         <div id="contador-privado" style="display: none; font-family: sans-serif; font-size: 14px; color: #888; text-align: center; margin: 30px auto; padding: 10px; max-width: 300px; border-top: 1px dashed #444;">
-          📊 Vistas totales (Modo Admin): <span id="numero-vistas-privado" style="font-weight: bold; color: #1db954;">...</span>
+          📊 Vistas totales (Modo Admin): <span id="numero-vistas-privado" style="font-weight: bold; color: #007bff;">...</span>
         </div>
         <!-- ========================================================= -->
 
@@ -260,7 +260,7 @@
     <!-- Elemento de Audio NATIVO -->
     <audio id="mi-audio"></audio>
 
-    <!-- Script del iPod Player -->
+    <!-- Script Integrado de Música y Contador -->
     <script>
         const listaAudios = [
             "audio/sonido1.mp3",
@@ -286,6 +286,6 @@
         btnPlayPausa.addEventListener("click", () => {
             if (reproductor.paused) {
                 reproductor.play()
-
+                    .then(() => btnPlayPausa.textContent = "||")
 
 
