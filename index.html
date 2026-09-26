@@ -383,9 +383,9 @@
 <img src="img/gif1.gif" style="width: 120px; position: relative; transform: translate(135px, -200px);" alt="">
 
 
-<!-- Bloque Admin: Siempre visible en tu HTML -->
-<div id="bloque-admin" style="background: #000000; color: #00ff00; padding: 15px; margin: 20px 0; border-radius: 8px; border: 2px solid #00ff00; font-family: monospace; text-align: center; font-size: 1.1em; line-height: 1.6em;">
-  📊 MODO ADMIN ACTIVADO <br>
+<!-- Bloque Admin: Ahora inicia OCULTO con 'display: none' -->
+<div id="bloque-admin" style="display: none; background: #000000; color: #00ff00; padding: 15px; margin: 20px 0; border-radius: 8px; border: 2px solid #00ff00; font-family: monospace; text-align: center; font-size: 1.1em; line-height: 1.6em;">
+  📊 MODO ADMIN ACTIVADO (Lectura Segura) <br>
   Vistas totales globales: <strong id="vistas">Cargando...</strong> <br>
   Última visita registrada: <span id="fecha-ultima" style="color: #00ffff;">Cargando...</span>
 </div>
@@ -408,32 +408,33 @@
     var direccionWeb = window.location.href.toLowerCase();
     var esAdmin = direccionWeb.indexOf("admin") !== -1;
 
-    // TRUCO: Si eres admin usa 'get' (solo lee), si es un visitante usa 'hit' (suma +1)
+    // Si eres admin usa 'get' (solo lee), si es un visitante usa 'hit' (suma +1)
     var operacion = esAdmin ? "get" : "hit";
     var urlBase = "https://mileshilliard.com" + operacion + "/" + miClaveGlobal;
 
-    // Mostramos la última fecha registrada
+    // Recuperamos la última fecha registrada
     var ultimaFecha = localStorage.getItem("r1804_fecha_registro");
     if (!ultimaFecha) {
       ultimaFecha = obtenerFechaActual();
     }
-    document.getElementById("fecha-ultima").innerText = ultimaFecha;
 
-    // Solo actualizamos la fecha en el navegador si NO eres el administrador
-    if (!esAdmin) {
-      localStorage.setItem("r1804_fecha_registro", obtenerFechaActual());
+    if (esAdmin) {
+      // CORRECCIÓN: Si eres administrador, hacemos aparecer el recuadro verde de inmediato
+      document.getElementById("bloque-admin").style.display = "block";
+      document.getElementById("fecha-ultima").innerText = ultimaFecha;
     } else {
-      // Modificamos visualmente el título para confirmarte que estás navegando de forma segura sin sumar
-      document.getElementById("bloque-admin").innerHTML = "📊 MODO ADMIN ACTIVADO (Lectura Segura) <br> Vistas totales globales: <strong id='vistas'>Cargando...</strong> <br> Última visita registrada: <span id='fecha-ultima' style='color: #00ffff;'>" + ultimaFecha + "</span>";
+      // Si es un visitante normal, actualizamos su registro interno de fecha de visita
+      localStorage.setItem("r1804_fecha_registro", obtenerFechaActual());
     }
 
-    // Realizamos la consulta al servidor
+    // Realizamos la consulta al servidor de forma silenciosa para el usuario
     fetch(urlBase)
       .then(function(response) {
         if (!response.ok) throw new Error("Error en servidor");
         return response.json();
       })
       .then(function(data) {
+        // Solo intentará pintar el número si el elemento HTML está visible para el administrador
         var elementoVistas = document.getElementById("vistas");
         if (elementoVistas && data && data.value !== undefined) {
           elementoVistas.innerText = data.value;
@@ -441,7 +442,9 @@
       })
       .catch(function(error) {
         console.error(error);
-        document.getElementById("vistas").innerText = "Error de conexión";
+        if (esAdmin) {
+          document.getElementById("vistas").innerText = "Error de conexión";
+        }
       });
   });
 </script>
