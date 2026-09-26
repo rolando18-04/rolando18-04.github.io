@@ -382,33 +382,54 @@
 
 <img src="img/gif1.gif" style="width: 120px; position: relative; transform: translate(135px, -200px);" alt="">
 
-<!-- El bloque inicia totalmente oculto para todos los usuarios -->
-<div id="bloque-admin" style="display: none; background: #1a1a1a; color: #00ff00; padding: 12px; margin: 15px 0; border-radius: 8px; border: 1px solid #333; font-family: monospace; text-align: center;">
-  📊 Vistas totales (Modo Admin): <strong id="vistas" style="font-size: 1.2em;">...</strong>
+<!-- Bloque Admin: Cambia su diseño para que resalte visualmente cuando entres -->
+<div id="bloque-admin" style="display: none; background: #000000; color: #00ff00; padding: 15px; margin: 20px 0; border-radius: 8px; border: 2px solid #00ff00; font-family: monospace; text-align: center; font-size: 1.1em;">
+  📊 MODO ADMIN ACTIVADO <br>
+  Vistas totales: <strong id="vistas">Cargando...</strong>
 </div>
 
 <script>
-  document.addEventListener("DOMContentLoaded", () => {
-    const miKey = "rolando18-04_github_io_vistas"; 
-
-    // La API registra la visita de manera invisible en segundo plano
-    fetch(`https://mileshilliard.com{miKey}`)
-      .then(res => res.json())
-      .then(data => {
-        document.getElementById("vistas").innerText = data.value;
-      })
-      .catch(err => console.error("Error en contador:", err));
-
-    // REVISAR SI LA URL TIENE LA PALABRA ADEMÁS DE LA DIRECCIÓN
-    // Revisa si la barra de direcciones incluye "?admin" o el texto "/#admin"
-    const parametros = window.location.search + window.location.hash;
+  document.addEventListener("DOMContentLoaded", function() {
+    // Clave única para tu contador de GitHub Pages
+    var miKey = "rolando18-04_github_io_vistas"; 
     
-    if (parametros.toLowerCase().includes("admin")) {
-      // Si entraste con la palabra secreta, se revela el panel en PC y Teléfono
-      document.getElementById("bloque-admin").style.display = "block";
+    // URL usando comillas simples estándar para evitar errores de formato en editores
+    var urlAPI = "https://mileshilliard.com" + miKey;
+
+    // Llamada directa al servidor de datos
+    fetch(urlAPI)
+      .then(function(res) { 
+        return res.json(); 
+      })
+      .then(function(data) {
+        // Buscamos el elemento y reemplazamos el texto por el número real
+        var elementoVistas = document.getElementById("vistas");
+        if (elementoVistas) {
+          elementoVistas.innerText = data.value;
+        }
+      })
+      .catch(function(err) {
+        console.error("Error al conectar con la API:", err);
+        var elementoVistas = document.getElementById("vistas");
+        if (elementoVistas) {
+          elementoVistas.innerText = "Error de conexión";
+        }
+      });
+
+    // ACTIVACIÓN POR DIRECCIÓN WEB (URL)
+    // Lee lo que hay escrito en la barra de direcciones de tu navegador
+    var direccionWeb = window.location.href.toLowerCase();
+    
+    // Si tu dirección contiene la palabra secreta admin, muestra el bloque
+    if (direccionWeb.indexOf("admin") !== -1) {
+      var panelAdmin = document.getElementById("bloque-admin");
+      if (panelAdmin) {
+        panelAdmin.style.display = "block";
+      }
     }
   });
 </script>
+
 
 
 </body>
