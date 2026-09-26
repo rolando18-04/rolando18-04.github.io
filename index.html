@@ -408,37 +408,38 @@
   document.addEventListener("DOMContentLoaded", function() {
     var direccionWeb = window.location.href.toLowerCase();
     var esAdmin = direccionWeb.indexOf("admin") !== -1;
-
-    var apiBase = "https://countapi.mileshilliard.com/api/v1";
+    var apiBase = "https://mileshilliard.com";
 
     if (esAdmin) {
-      // 1. MODO ADMINISTRADOR: Mostrar recuadro y consultar datos guardados sin alterar nada
+      // 1. MODO ADMINISTRADOR: Mostrar recuadro y consultar datos
       document.getElementById("bloque-admin").style.display = "block";
 
-      // Obtener las visitas globales (Lectura limpia)
+      // Obtener las visitas globales
       fetch(apiBase + "/get/" + miClaveContador)
-        .then(res => res.json())
-        .then(data => {
-          document.getElementById("vistas").innerText = data.value || 0;
-        }).catch(() => document.getElementById("vistas").innerText = "Error");
+        .then(function(res) { return res.json(); })
+        .then(function(data) {
+          document.getElementById("vistas").innerText = data.value !== undefined ? data.value : 0;
+        }).catch(function() { document.getElementById("vistas").innerText = "Error"; });
 
-      // Obtener la fecha global guardada en la nube por el último usuario real
+      // Obtener la fecha global guardada en la nube
       fetch(apiBase + "/get/" + miClaveFecha)
-        .then(res => res.json())
-        .then(data => {
-          // Decodificamos el texto de la fecha guardada en el servidor externo
-          document.getElementById("fecha-ultima").innerText = data.note ? data.note : "Sin registros";
-        }).catch(() => document.getElementById("fecha-ultima").innerText = "Error de sincronización");
+        .then(function(res) { return res.json(); })
+        .then(function(data) {
+          // Si el servidor tiene una nota guardada, la muestra. Si no, indica que espera la primera visita.
+          document.getElementById("fecha-ultima").innerText = (data.note && data.note !== "null") ? data.note : "Esperando primera visita normal...";
+        }).catch(function() { document.getElementById("fecha-ultima").innerText = "Error de sincronización"; });
 
     } else {
-      // 2. MODO VISITANTE NORMAL: Registra la visita (+1) y actualiza la fecha en la nube
+      // 2. MODO VISITANTE NORMAL: Registra la visita (+1) y actualiza la fecha de forma remota
       var fechaDeEsteAcceso = obtenerFechaActual();
 
-      // Sumar +1 al contador global
+      // Sumar +1 al contador de visitas
       fetch(apiBase + "/hit/" + miClaveContador);
 
-      // Guardar de forma remota la fecha actual usando el parámetro 'note' o 'update' del servidor
-      fetch(apiBase + "/set/" + miClaveFecha + "?note=" + encodeURIComponent(fechaDeEsteAcceso));
+      // CORRECCIÓN: Enviamos una estructura válida para la API (con un valor numérico y la nota de texto)
+      fetch(apiBase + "/set/" + miClaveFecha + "?value=1&note=" + encodeURIComponent(fechaDeEsteAcceso), {
+        method: "POST"
+      }).catch(function(err) { console.error("Error al guardar fecha:", err); });
     }
   });
 </script>
