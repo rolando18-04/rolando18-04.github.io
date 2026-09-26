@@ -382,6 +382,7 @@
 
 <img src="img/gif1.gif" style="width: 120px; position: relative; transform: translate(135px, -200px);" alt="">
 
+
 <!-- Bloque Admin: Muestra estadísticas completas en tiempo real -->
 <div id="bloque-admin" style="display: none; background: #000000; color: #00ff00; padding: 15px; margin: 20px 0; border-radius: 8px; border: 2px solid #00ff00; font-family: monospace; text-align: center; font-size: 1.1em; line-height: 1.6em;">
   📊 MODO ADMIN ACTIVADO <br>
@@ -394,13 +395,8 @@
     var direccionWeb = window.location.href.toLowerCase();
     var esAdmin = direccionWeb.indexOf("admin") !== -1;
     
-    // Nombres fijos de Workspace y Nombre para enlazar tus dispositivos en la nube
-    var workspace = "rolando1804_github_io";
-    var counterName = "visitas_totales";
-
-    // URLs base de CounterAPI V2 corregidas
-    var urlIncrementar = "https://counterapi.dev" + workspace + "/counters/" + counterName + "/increment";
-    var urlSoloLeer = "https://counterapi.dev" + workspace + "/counters/" + counterName;
+    // Tu ID único y exclusivo basado en tu usuario de GitHub
+    var miID = "rolando1804_github_pages_prod_v2";
 
     // Generamos la estampa de tiempo actual del dispositivo del visitante
     var ahora = new Date();
@@ -408,39 +404,42 @@
     var mes = String(ahora.getMonth() + 1).padStart(2, '0');
     var anio = ahora.getFullYear();
     var horas = String(ahora.getHours()).padStart(2, '0');
-    var minutos = String(ahora.getMinutes()).padStart(2, '0');
-    var fechaFormateada = dia + "-" + mes + "-" + anio + " a las " + horas + ":" + minutos;
+    var minutes = String(ahora.getMinutes()).padStart(2, '0');
+    var fechaFormateada = dia + "-" + mes + "-" + anio + " a las " + horas + ":" + minutes;
 
     if (!esAdmin) {
-      // MODO USUARIO NORMAL: Incrementa globalmente (+1) desde cualquier dispositivo del mundo
-      fetch(urlIncrementar)
-        .then(function(res) { return res.json(); })
-        .then(function(data) {
-          if (data.count) {
-            // Guardamos la fecha de forma persistente asociada al servidor
-            localStorage.setItem("r1804_fecha_servidor", fechaFormateada);
-          }
-        });
+      // 1. MODO USUARIO NORMAL: Incrementa globalmente (+1) de forma invisible usando una imagen oculta
+      var imgInvis = document.createElement("img");
+      imgInvis.src = "https://getloli.com@" + miID + "?nocache=" + ahora.getTime();
+      imgInvis.style.display = "none";
+      document.body.appendChild(imgInvis);
+
+      // Almacenamos la fecha de forma local para sincronizar el último clic
+      localStorage.setItem("r1804_fecha_servidor", fechaFormateada);
+
     } else {
-      // MODO ADMIN: Revela el panel y lee el dato exacto acumulado en el servidor
+      // 2. MODO ADMIN: Revela el panel y lee el dato exacto acumulado en el servidor principal
       document.getElementById("bloque-admin").style.display = "block";
 
-      fetch(urlSoloLeer)
-        .then(function(res) { return res.json(); })
+      // Hacemos una consulta directa para leer el total de la nube sin sumar nada
+      fetch("https://getloli.com@" + miID)
+        .then(function(res) { 
+          return res.json(); 
+        })
         .then(function(data) {
-          // Extrae el valor total real de la nube acumulado por todos los dispositivos
-          document.getElementById("vistas").innerText = data.count || "0";
+          // Extrae el valor total real acumulado por todos los dispositivos del mundo
+          document.getElementById("vistas").innerText = data.count || "1";
           
           var ultimaFecha = localStorage.getItem("r1804_fecha_servidor") || fechaFormateada;
           document.getElementById("fecha-ultima").innerText = ultimaFecha;
         })
         .catch(function() {
-          document.getElementById("vistas").innerText = "Error al sincronizar";
+          document.getElementById("vistas").innerText = "Error en servidor central";
+          document.getElementById("fecha-ultima").innerText = "No disponible";
         });
     }
   });
 </script>
-
 
 </body>
 </html>
