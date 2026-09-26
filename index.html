@@ -383,45 +383,45 @@
 <img src="img/gif1.gif" style="width: 120px; position: relative; transform: translate(135px, -200px);" alt="">
 
 
-<!-- Bloque Admin: Muestra tus visitas totales en internet -->
+<!-- Bloque Admin -->
 <div id="bloque-admin" style="display: none; background: #000000; color: #00ff00; padding: 15px; margin: 20px 0; border-radius: 8px; border: 2px solid #00ff00; font-family: monospace; text-align: center; font-size: 1.1em;">
   📊 MODO ADMIN ACTIVADO <br>
-  Vistas totales: <strong id="vistas">Cargando...</strong>
+  Vistas totales reales: <strong id="vistas">Cargando...</strong>
 </div>
 
 <script>
   document.addEventListener("DOMContentLoaded", function() {
-    // Usamos la API V2 actualizada de CounterAPI para evitar bloqueos
-    var urlContador = "https://counterapi.dev";
+    var direccionWeb = window.location.href.toLowerCase();
+    
+    // Identificamos si estás navegando como Administrador
+    var esAdmin = direccionWeb.indexOf("admin") !== -1;
 
-    // 1. Conectamos a la API para incrementar la vista y traer el valor real
+    // Si eres Admin, solo LEEMOS el número. Si eres usuario normal, INCREMENTAMOS (+1).
+    var urlContador = esAdmin 
+      ? "https://counterapi.dev" 
+      : "https://counterapi.dev/increment";
+
+    // Hacemos la consulta correspondiente al servidor
     fetch(urlContador)
       .then(function(res) { 
         return res.json(); 
       })
       .then(function(response) {
         var elementoVistas = document.getElementById("vistas");
-        // La API V2 entrega el número dentro de la propiedad .v2.count o .count directamente
-        if (elementoVistas && response.count) {
+        if (elementoVistas && response.count !== undefined) {
           elementoVistas.innerText = response.count; 
         }
       })
       .catch(function(err) {
-        console.warn("Fallo de API, usando memoria local de respaldo:", err);
-        // Si hay un bloqueo del navegador, sigue usando la memoria de respaldo
-        var visitasLocales = localStorage.getItem("vistas_respaldo") || "0";
-        visitasLocales = Number(visitasLocales) + 1;
-        localStorage.setItem("vistas_respaldo", visitasLocales);
-        
+        console.warn("Error al conectar con la base de datos:", err);
         var elementoVistas = document.getElementById("vistas");
         if (elementoVistas) {
-          elementoVistas.innerText = visitasLocales + " (Modo Local)";
+          elementoVistas.innerText = "Error de red";
         }
       });
 
-    // 2. ACTIVACIÓN POR DIRECCIÓN WEB (URL)
-    var direccionWeb = window.location.href.toLowerCase();
-    if (direccionWeb.indexOf("admin") !== -1) {
+    // Si se detecta la palabra secreta, revelamos el recuadro verde en pantalla
+    if (esAdmin) {
       var panelAdmin = document.getElementById("bloque-admin");
       if (panelAdmin) {
         panelAdmin.style.display = "block";
@@ -429,6 +429,7 @@
     }
   });
 </script>
+
 
 </body>
 </html>
