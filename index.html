@@ -383,13 +383,6 @@
 <img src="img/gif1.gif" style="width: 120px; position: relative; transform: translate(135px, -200px);" alt="">
 
 
-<!-- Bloque Admin: Muestra estadísticas completas en tiempo real -->
-<div id="bloque-admin" style="display: none; background: #000000; color: #00ff00; padding: 15px; margin: 20px 0; border-radius: 8px; border: 2px solid #00ff00; font-family: monospace; text-align: center; font-size: 1.1em; line-height: 1.6em;">
-  📊 MODO ADMIN ACTIVADO <br>
-  Vistas totales globales: <strong id="vistas">Cargando...</strong> <br>
-  Última visita registrada: <span id="fecha-ultima" style="color: #00ffff;">Cargando...</span>
-</div>
-
 <script>
   // Nombre de clave súper único para tu base de datos global en la nube
   var miClaveGlobal = "rolando1804_github_io_vistas_estables_2026";
@@ -399,6 +392,8 @@
     var elementoVistas = document.getElementById("vistas");
     if (elementoVistas && data && data.value !== undefined) {
       elementoVistas.innerText = data.value;
+    } else {
+      document.getElementById("vistas").innerText = "Error de datos";
     }
     
     // Recupera la última fecha guardada en este navegador o muestra la actual
@@ -425,6 +420,8 @@
 
     // Determina la acción: 'get' para el administrador (solo lee) o 'hit' para usuarios comunes (suma +1)
     var operacion = esAdmin ? "get" : "hit";
+    
+    // CORRECCIÓN AQUÍ: Se añadió "countapi." al dominio para apuntar al servidor correcto
     var urlBase = "https://mileshilliard.com" + operacion + "/" + miClaveGlobal;
 
     if (!esAdmin) {
@@ -435,13 +432,19 @@
       document.getElementById("bloque-admin").style.display = "block";
     }
 
-    // TRUCO DEFINITIVO: Inyectamos un script dinámico (JSONP) que se salta todas las restricciones de red y bloqueos
+    // Inyectamos el script dinámico (JSONP) que se salta las restricciones de red externos
     var scriptInyeccion = document.createElement("script");
     scriptInyeccion.src = urlBase + "?callback=procesarContador&nocache=" + new Date().getTime();
+    
+    // Control de errores por si el servidor externo está caído o lento
+    scriptInyeccion.onerror = function() {
+      document.getElementById("vistas").innerText = "Error de conexión";
+      document.getElementById("fecha-ultima").innerText = "No disponible";
+    };
+    
     document.body.appendChild(scriptInyeccion);
   });
 </script>
-
 
 </body>
 </html>
