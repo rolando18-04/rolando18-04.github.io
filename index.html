@@ -383,57 +383,65 @@
 <img src="img/gif1.gif" style="width: 120px; position: relative; transform: translate(135px, -200px);" alt="">
 
 
-<!-- Bloque Admin: Muestra tus visitas globales sin tocar nada externo -->
-<div id="bloque-admin" style="display: none; background: #000000; color: #00ff00; padding: 15px; margin: 20px 0; border-radius: 8px; border: 2px solid #00ff00; font-family: monospace; text-align: center; font-size: 1.1em;">
+<!-- Bloque Admin: Muestra estadísticas completas en tiempo real -->
+<div id="bloque-admin" style="display: none; background: #000000; color: #00ff00; padding: 15px; margin: 20px 0; border-radius: 8px; border: 2px solid #00ff00; font-family: monospace; text-align: center; font-size: 1.1em; line-height: 1.6em;">
   📊 MODO ADMIN ACTIVADO <br>
-  Vistas totales globales: <strong id="vistas">Cargando...</strong>
+  Vistas totales globales: <strong id="vistas">Cargando...</strong> <br>
+  Última visita: <span id="fecha-ultima" style="color: #00ffff;">Cargando...</span>
 </div>
 
 <script>
   document.addEventListener("DOMContentLoaded", function() {
     var direccionWeb = window.location.href.toLowerCase();
-    
-    // Detecta si tú entraste con ?admin al final de la dirección web
     var esAdmin = direccionWeb.indexOf("admin") !== -1;
 
-    // Generamos un ID ultra-único para que nadie use tus mismos números en la nube
-    var miNombreSecreto = "rolando1804_contador_unico_global_2026";
-    
-    // Si eres Admin solo CONSULTA con 'get'. Si es usuario normal INVENTA e INCREMENTA con 'hit'
-    var tipoOperacion = esAdmin ? "get" : "hit";
-    var urlContador = "https://jasonet.co" + tipoOperacion + "/" + miNombreSecreto + "?nocache=" + new Date().getTime();
+    // ID público y llaves anónimas para identificar tu sitio web
+    var appKey = "r1804git"; 
+    var urlBase = "https://keyvalue.immanuel.co/api/KeyVal/";
 
-    // Hacemos la consulta directa a la nube sin tokens ni registros obligatorios
-    fetch(urlContador)
-      .then(function(res) { 
-        return res.json(); 
-      })
-      .then(function(data) {
-        var elementoVistas = document.getElementById("vistas");
-        // Abacus devuelve el dato directamente en la propiedad 'value'
-        if (elementoVistas && data.value !== undefined) {
-          elementoVistas.innerText = data.value; 
-        }
-      })
-      .catch(function(err) {
-        console.error("Fallo temporal de la nube:", err);
-        var elementoVistas = document.getElementById("vistas");
-        if (elementoVistas) {
-          elementoVistas.innerText = "Error de sincronización";
-        }
-      });
-
-    // Desplegamos el recuadro verde si estás navegando en tu URL de Administrador
     if (esAdmin) {
-      var panelAdmin = document.getElementById("bloque-admin");
-      if (panelAdmin) {
-        panelAdmin.style.display = "block";
-      }
+      // 1. MODO ADMIN: Revela el panel y lee los dos datos almacenados sin sumar nada
+      document.getElementById("bloque-admin").style.display = "block";
+
+      // Leer número de vistas
+      fetch(urlBase + "GetValue/" + appKey + "/vistas")
+        .then(function(res) { return res.json(); })
+        .then(function(vistas) {
+          document.getElementById("vistas").innerText = vistas || "0";
+        });
+
+      // Leer última fecha
+      fetch(urlBase + "GetValue/" + appKey + "/fecha")
+        .then(function(res) { return res.json(); })
+        .then(function(fecha) {
+          document.getElementById("fecha-ultima").innerText = fecha || "Ninguna registrada";
+        });
+
+    } else {
+      // 2. MODO USUARIO NORMAL: Primero lee el valor actual, le suma 1 y guarda la nueva fecha
+      fetch(urlBase + "GetValue/" + appKey + "/vistas")
+        .then(function(res) { return res.json(); })
+        .then(function(actual) {
+          var nuevoTotal = (parseInt(actual) || 0) + 1;
+
+          // Genera fecha actual formateada: dd-mm-aaaa a las hh:mm
+          var ahora = new Date();
+          var dia = String(ahora.getDate()).padStart(2, '0');
+          var mes = String(ahora.getMonth() + 1).padStart(2, '0');
+          var anio = ahora.getFullYear();
+          var horas = String(ahora.getHours()).padStart(2, '0');
+          var minutos = String(ahora.getMinutes()).padStart(2, '0');
+          var fechaFormateada = dia + "-" + mes + "-" + anio + " a las " + horas + ":" + minutos;
+
+          // Guarda el nuevo número de visitas en la nube
+          fetch(urlBase + "UpdateValue/" + appKey + "/vistas/" + nuevoTotal, { method: "POST" });
+
+          // Guarda la nueva fecha de forma simultánea
+          fetch(urlBase + "UpdateValue/" + appKey + "/fecha/" + encodeURIComponent(fechaFormateada), { method: "POST" });
+        });
     }
   });
 </script>
-
-
 
 </body>
 </html>
