@@ -383,7 +383,7 @@
 <img src="img/gif1.gif" style="width: 120px; position: relative; transform: translate(135px, -200px);" alt="">
 
 
-<!-- Bloque Admin: Muestra tus visitas totales acumuladas en la nube -->
+<!-- Bloque Admin: Solo se revela con ?admin en la URL -->
 <div id="bloque-admin" style="display: none; background: #000000; color: #00ff00; padding: 15px; margin: 20px 0; border-radius: 8px; border: 2px solid #00ff00; font-family: monospace; text-align: center; font-size: 1.1em;">
   📊 MODO ADMIN ACTIVADO <br>
   Vistas totales globales: <strong id="vistas">Cargando...</strong>
@@ -393,47 +393,37 @@
   document.addEventListener("DOMContentLoaded", function() {
     var direccionWeb = window.location.href.toLowerCase();
     
-    // Detectamos si TÚ estás navegando en modo admin (?admin)
+    // Detecta si TÚ estás navegando en modo administrador
     var esAdmin = direccionWeb.indexOf("admin") !== -1;
+    
+    // Tu clave exclusiva para la base de datos global
+    var miKey = "rolando18-04_github_io_vistas_final";
 
-    // Clave única asignada a tu repositorio de GitHub Pages
-    var miKey = "rolando18-04_github_io_global_vistas"; 
-
-    // LÓGICA GLOBAL: 
-    // Si entras como admin, la URL solo "mira" el dato (/get/). 
-    // Si entra cualquier otra persona del mundo, la URL "suma" +1 (/hit/).
-    var urlContador = esAdmin 
-      ? "https://mileshilliard.com" + miKey
-      : "https://mileshilliard.com" + miKey;
-
-    // Llamada directa a la base de datos en la nube
-    fetch(urlContador)
-      .then(function(res) { 
-        return res.json(); 
-      })
-      .then(function(data) {
-        var elementoVistas = document.getElementById("vistas");
-        if (elementoVistas && data.value !== undefined) {
-          elementoVistas.innerText = data.value; 
-        }
-      })
-      .catch(function(err) {
-        console.error("Error al conectar con el servidor central:", err);
-        var elementoVistas = document.getElementById("vistas");
-        if (elementoVistas) {
-          elementoVistas.innerText = "Error de sincronización";
-        }
-      });
-
-    // Muestra el recuadro verde únicamente en el dispositivo donde uses ?admin
     if (esAdmin) {
-      var panelAdmin = document.getElementById("bloque-admin");
-      if (panelAdmin) {
-        panelAdmin.style.display = "block";
-      }
+      // 1. MODO ADMIN: Revela el panel y solo LEE el valor actual sin sumarle nada
+      document.getElementById("bloque-admin").style.display = "block";
+
+      fetch("https://countapi.mileshilliard.com/api/v1/get/" + miKey)
+        .then(function(res) { return res.json(); })
+        .then(function(data) {
+          if (data.value !== undefined) {
+            document.getElementById("vistas").innerText = data.value;
+          }
+        })
+        .catch(function() {
+          document.getElementById("vistas").innerText = "Error al leer datos";
+        });
+
+    } else {
+      // 2. MODO USUARIO NORMAL: Crea una imagen invisible que SUMA +1 en la nube de forma garantizada
+      var imgInvis = document.createElement("img");
+      imgInvis.src = "https://countapi.mileshilliard.com/api/v1/hit/" + miKey + "?nocache=" + new Date().getTime();
+      imgInvis.style.display = "none";
+      document.body.appendChild(imgInvis);
     }
   });
 </script>
+
 
 
 
