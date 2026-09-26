@@ -383,60 +383,49 @@
 <img src="img/gif1.gif" style="width: 120px; position: relative; transform: translate(135px, -200px);" alt="">
 
 
-<!-- Bloque Admin: Muestra tus visitas totales en internet -->
+<!-- Bloque Admin: Muestra tus visitas totales acumuladas en la nube -->
 <div id="bloque-admin" style="display: none; background: #000000; color: #00ff00; padding: 15px; margin: 20px 0; border-radius: 8px; border: 2px solid #00ff00; font-family: monospace; text-align: center; font-size: 1.1em;">
   📊 MODO ADMIN ACTIVADO <br>
-  Vistas totales reales: <strong id="vistas">Cargando...</strong>
+  Vistas totales globales: <strong id="vistas">Cargando...</strong>
 </div>
 
 <script>
   document.addEventListener("DOMContentLoaded", function() {
     var direccionWeb = window.location.href.toLowerCase();
     
-    // Identificamos si estás navegando como Administrador (?admin)
+    // Detectamos si TÚ estás navegando en modo admin (?admin)
     var esAdmin = direccionWeb.indexOf("admin") !== -1;
 
-    // Generamos un número único por tiempo para forzar al servidor a actualizarse siempre
-    var antiCache = new Date().getTime();
+    // Clave única asignada a tu repositorio de GitHub Pages
+    var miKey = "rolando18-04_github_io_global_vistas"; 
 
-    // Reemplazamos el dominio caído por la API activa de hitscounter.dev
-    // El formato 'view' solo lee sin sumar. El formato 'incr' le suma +1 de forma global.
+    // LÓGICA GLOBAL: 
+    // Si entras como admin, la URL solo "mira" el dato (/get/). 
+    // Si entra cualquier otra persona del mundo, la URL "suma" +1 (/hit/).
     var urlContador = esAdmin 
-      ? "https://hitscounter.dev" + antiCache
-      : "https://hitscounter.dev" + antiCache;
+      ? "https://mileshilliard.com" + miKey
+      : "https://mileshilliard.com" + miKey;
 
-    // Ejecutamos la llamada al nuevo servidor
+    // Llamada directa a la base de datos en la nube
     fetch(urlContador)
       .then(function(res) { 
-        return res.text(); 
+        return res.json(); 
       })
-      .then(function(svgTexto) {
+      .then(function(data) {
         var elementoVistas = document.getElementById("vistas");
-        if (elementoVistas) {
-          // Extraemos de forma limpia los números del interior de la respuesta gráfica del servidor
-          var coincidencia = svgTexto.match(/<text[^>]*>([\d,]+)<\/text>/g);
-          if (coincidencia && coincidencia.length > 0) {
-            var numeroFinal = coincidencia[coincidencia.length - 1].replace(/<\/?[^>]+(>|$)/g, "");
-            elementoVistas.innerText = numeroFinal;
-          } else {
-            elementoVistas.innerText = "1";
-          }
+        if (elementoVistas && data.value !== undefined) {
+          elementoVistas.innerText = data.value; 
         }
       })
       .catch(function(err) {
-        console.warn("Fallo en servidor general, usando datos internos temporales.");
-        var visitasLocales = localStorage.getItem("vistas_respaldo") || "1";
-        if (!esAdmin) {
-          visitasLocales = Number(visitasLocales) + 1;
-          localStorage.setItem("vistas_respaldo", visitasLocales);
-        }
+        console.error("Error al conectar con el servidor central:", err);
         var elementoVistas = document.getElementById("vistas");
         if (elementoVistas) {
-          elementoVistas.innerText = visitasLocales + " (Modo Local)";
+          elementoVistas.innerText = "Error de sincronización";
         }
       });
 
-    // Revela el recuadro verde únicamente en la URL del administrador
+    // Muestra el recuadro verde únicamente en el dispositivo donde uses ?admin
     if (esAdmin) {
       var panelAdmin = document.getElementById("bloque-admin");
       if (panelAdmin) {
@@ -445,6 +434,7 @@
     }
   });
 </script>
+
 
 
 </body>
