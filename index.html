@@ -415,6 +415,41 @@
       });
   });
 </script>
+<!-- ========================================================= -->
+<!-- BOTÓN INVISIBLE - SOLO NÚMEROS                            -->
+<!-- ========================================================= -->
+<center>
+    <!-- Recuadro transparente invisible debajo de tus GIFs -->
+    <div onclick="mostrarOcultarVistas()" style="width: 100px; height: 30px; background: transparent; cursor: pointer; margin: 20px auto; user-select: none;"></div>
+
+    <!-- El número aparece solo, con un color gris apagado y discreto -->
+    <div id="texto-vistas-oculto" style="display: none; font-family: sans-serif; font-size: 11px; color: #444455; margin-top: 5px;">
+        <span id="numero-vistas-valor">0</span>
+    </div>
+</center>
+
+<script>
+    (function () {
+        let contadorVistas = localStorage.getItem("rolando_solo_numeros_views");
+        if (!contadorVistas) {
+            contadorVistas = 1;
+        } else {
+            contadorVistas = parseInt(contadorVistas) + 1;
+        }
+        localStorage.setItem("rolando_solo_numeros_views", contadorVistas);
+        document.getElementById("numero-vistas-valor").innerText = contadorVistas;
+    })();
+
+    function mostrarOcultarVistas() {
+        const divTexto = document.getElementById("texto-vistas-oculto");
+        if (divTexto.style.display === "none" || divTexto.style.display === "") {
+            divTexto.style.display = "block";
+        } else {
+            divTexto.style.display = "none";
+        }
+    }
+</script>
+<!-- ========================================================= -->
 
 </body>
 </html>
