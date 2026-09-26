@@ -383,7 +383,7 @@
 <img src="img/gif1.gif" style="width: 120px; position: relative; transform: translate(135px, -200px);" alt="">
 
 
-<!-- Bloque Admin: Ahora inicia OCULTO con 'display: none' -->
+<!-- Bloque Admin: Inicia oculto para los usuarios normales -->
 <div id="bloque-admin" style="display: none; background: #000000; color: #00ff00; padding: 15px; margin: 20px 0; border-radius: 8px; border: 2px solid #00ff00; font-family: monospace; text-align: center; font-size: 1.1em; line-height: 1.6em;">
   📊 MODO ADMIN ACTIVADO (Lectura Segura) <br>
   Vistas totales globales: <strong id="vistas">Cargando...</strong> <br>
@@ -391,6 +391,7 @@
 </div>
 
 <script>
+  // Tu clave única global en la nube
   var miClaveGlobal = "rolando1804_github_io_vistas_estables_2026";
 
   function obtenerFechaActual() {
@@ -404,44 +405,42 @@
   }
 
   document.addEventListener("DOMContentLoaded", function() {
-    // Detectamos si la URL de tu navegador tiene la palabra "admin" escrita
+    // Detectamos si la URL contiene la palabra "admin" de forma segura
     var direccionWeb = window.location.href.toLowerCase();
     var esAdmin = direccionWeb.indexOf("admin") !== -1;
 
-    // Si eres admin usa 'get' (solo lee), si es un visitante usa 'hit' (suma +1)
+    // Determinamos la operación sin alterar la estructura limpia de la API
     var operacion = esAdmin ? "get" : "hit";
-    var urlBase = "https://mileshilliard.com" + operacion + "/" + miClaveGlobal;
-
-    // Recuperamos la última fecha registrada
-    var ultimaFecha = localStorage.getItem("r1804_fecha_registro");
-    if (!ultimaFecha) {
-      ultimaFecha = obtenerFechaActual();
-    }
+    var urlBase = "https://countapi.mileshilliard.com/api/v1/" + operacion + "/" + miClaveGlobal;
 
     if (esAdmin) {
-      // CORRECCIÓN: Si eres administrador, hacemos aparecer el recuadro verde de inmediato
+      // 1. Forzamos que el recuadro aparezca inmediatamente
       document.getElementById("bloque-admin").style.display = "block";
-      document.getElementById("fecha-ultima").innerText = ultimaFecha;
+      
+      // 2. CORRECCIÓN: Actualizamos la fecha en tiempo real para que veas tu hora de revisión actual
+      document.getElementById("fecha-ultima").innerText = obtenerFechaActual();
     } else {
-      // Si es un visitante normal, actualizamos su registro interno de fecha de visita
+      // Si es un usuario normal, guardamos su fecha en su almacenamiento local
       localStorage.setItem("r1804_fecha_registro", obtenerFechaActual());
     }
 
-    // Realizamos la consulta al servidor de forma silenciosa para el usuario
+    // Petición limpia usando FETCH nativo
     fetch(urlBase)
       .then(function(response) {
-        if (!response.ok) throw new Error("Error en servidor");
+        if (!response.ok) throw new Error("Error en la respuesta del servidor");
         return response.json();
       })
       .then(function(data) {
-        // Solo intentará pintar el número si el elemento HTML está visible para el administrador
         var elementoVistas = document.getElementById("vistas");
         if (elementoVistas && data && data.value !== undefined) {
+          // El número llega perfectamente desde la base de datos externa
           elementoVistas.innerText = data.value;
+        } else {
+          if (esAdmin) document.getElementById("vistas").innerText = "Formato inválido";
         }
       })
       .catch(function(error) {
-        console.error(error);
+        console.error("Detalle técnico:", error);
         if (esAdmin) {
           document.getElementById("vistas").innerText = "Error de conexión";
         }
