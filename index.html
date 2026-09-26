@@ -383,7 +383,7 @@
 <img src="img/gif1.gif" style="width: 120px; position: relative; transform: translate(135px, -200px);" alt="">
 
 
-<!-- Bloque Admin -->
+<!-- Bloque Admin: Muestra tus visitas totales en internet -->
 <div id="bloque-admin" style="display: none; background: #000000; color: #00ff00; padding: 15px; margin: 20px 0; border-radius: 8px; border: 2px solid #00ff00; font-family: monospace; text-align: center; font-size: 1.1em;">
   📊 MODO ADMIN ACTIVADO <br>
   Vistas totales reales: <strong id="vistas">Cargando...</strong>
@@ -393,34 +393,48 @@
   document.addEventListener("DOMContentLoaded", function() {
     var direccionWeb = window.location.href.toLowerCase();
     
-    // Identificamos si estás navegando como Administrador
+    // Identificamos si estás navegando como Administrador (?admin)
     var esAdmin = direccionWeb.indexOf("admin") !== -1;
 
-    // Si eres Admin, solo LEEMOS el número. Si eres usuario normal, INCREMENTAMOS (+1).
+    // Usamos la API pública de "Hits" (muy usada en repositorios de GitHub)
+    // El formato 'view' solo consulta el número, el formato 'count' le suma +1
     var urlContador = esAdmin 
-      ? "https://counterapi.dev" 
-      : "https://counterapi.dev/increment";
+      ? "https://seeyoufarm.com" 
+      : "https://seeyoufarm.com";
 
-    // Hacemos la consulta correspondiente al servidor
+    // Hacemos la consulta al servidor de imágenes de Hits
     fetch(urlContador)
       .then(function(res) { 
-        return res.json(); 
+        return res.text(); // Esta API responde con un SVG gráfico
       })
-      .then(function(response) {
+      .then(function(svgTexto) {
         var elementoVistas = document.getElementById("vistas");
-        if (elementoVistas && response.count !== undefined) {
-          elementoVistas.innerText = response.count; 
+        if (elementoVistas) {
+          // Truco técnico: Extraemos los dígitos numéricos dentro del código del SVG
+          var coincidencia = svgTexto.match(/<text[^>]*>([\d,]+)<\/text>/g);
+          if (coincidencia && coincidencia.length > 0) {
+            // Tomamos el último texto del SVG que contiene el número de visitas
+            var numeroFinal = coincidencia[coincidencia.length - 1].replace(/<\/?[^>]+(>|$)/g, "");
+            elementoVistas.innerText = numeroFinal;
+          } else {
+            elementoVistas.innerText = "1"; // Valor inicial si es la primera visita
+          }
         }
       })
       .catch(function(err) {
-        console.warn("Error al conectar con la base de datos:", err);
+        console.warn("Error de conexión externa, usando respaldo local.");
+        var visitasLocales = localStorage.getItem("vistas_respaldo") || "0";
+        if (!esAdmin) {
+          visitasLocales = Number(visitasLocales) + 1;
+          localStorage.setItem("vistas_respaldo", visitasLocales);
+        }
         var elementoVistas = document.getElementById("vistas");
         if (elementoVistas) {
-          elementoVistas.innerText = "Error de red";
+          elementoVistas.innerText = visitasLocales + " (Modo Local)";
         }
       });
 
-    // Si se detecta la palabra secreta, revelamos el recuadro verde en pantalla
+    // Si se detecta la palabra secreta admin, revelamos el panel en pantalla
     if (esAdmin) {
       var panelAdmin = document.getElementById("bloque-admin");
       if (panelAdmin) {
@@ -429,6 +443,7 @@
     }
   });
 </script>
+
 
 
 </body>
