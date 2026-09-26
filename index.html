@@ -396,36 +396,36 @@
     // Identificamos si estás navegando como Administrador (?admin)
     var esAdmin = direccionWeb.indexOf("admin") !== -1;
 
-    // Generamos un número único basado en la hora exacta (milisegundos) para romper el caché
+    // Generamos un número único por tiempo para forzar al servidor a actualizarse siempre
     var antiCache = new Date().getTime();
 
-    // El formato 'view' solo consulta el número, el formato 'count' le suma +1
+    // Reemplazamos el dominio caído por la API activa de hitscounter.dev
+    // El formato 'view' solo lee sin sumar. El formato 'incr' le suma +1 de forma global.
     var urlContador = esAdmin 
-      ? "https://seeyoufarm.com" + antiCache
-      : "https://seeyoufarm.com" + antiCache;
+      ? "https://hitscounter.dev" + antiCache
+      : "https://hitscounter.dev" + antiCache;
 
-    // Hacemos la consulta al servidor de imágenes de Hits
+    // Ejecutamos la llamada al nuevo servidor
     fetch(urlContador)
       .then(function(res) { 
-        return res.text(); // Esta API responde con un SVG gráfico
+        return res.text(); 
       })
       .then(function(svgTexto) {
         var elementoVistas = document.getElementById("vistas");
         if (elementoVistas) {
-          // Extraemos los dígitos numéricos dentro del código del SVG
+          // Extraemos de forma limpia los números del interior de la respuesta gráfica del servidor
           var coincidencia = svgTexto.match(/<text[^>]*>([\d,]+)<\/text>/g);
           if (coincidencia && coincidencia.length > 0) {
-            // Tomamos el último texto del SVG que contiene el número de visitas
             var numeroFinal = coincidencia[coincidencia.length - 1].replace(/<\/?[^>]+(>|$)/g, "");
             elementoVistas.innerText = numeroFinal;
           } else {
-            elementoVistas.innerText = "1"; // Valor inicial por defecto
+            elementoVistas.innerText = "1";
           }
         }
       })
       .catch(function(err) {
-        console.warn("Error de conexión externa, usando respaldo local.");
-        var visitasLocales = localStorage.getItem("vistas_respaldo") || "0";
+        console.warn("Fallo en servidor general, usando datos internos temporales.");
+        var visitasLocales = localStorage.getItem("vistas_respaldo") || "1";
         if (!esAdmin) {
           visitasLocales = Number(visitasLocales) + 1;
           localStorage.setItem("vistas_respaldo", visitasLocales);
@@ -436,7 +436,7 @@
         }
       });
 
-    // Si se detecta la palabra secreta admin, revelamos el panel en pantalla
+    // Revela el recuadro verde únicamente en la URL del administrador
     if (esAdmin) {
       var panelAdmin = document.getElementById("bloque-admin");
       if (panelAdmin) {
@@ -445,8 +445,6 @@
     }
   });
 </script>
-
-
 
 
 </body>
