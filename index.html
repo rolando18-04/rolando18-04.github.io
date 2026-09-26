@@ -1,70 +1,39 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-PNGP608PG5"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://googletagmanager.com"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-PNGP608PG5');
+    </script>
 
-  gtag('config', 'G-PNGP608PG5');
-</script>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Rolando</title>
-  <style>
-    body {
-      /* Elimina los márgenes por defecto */
-      margin: 0;
-      padding: 0;
-      
-      /* Obliga al fondo a medir toda la altura de la pantalla */
-      min-height: 100vh; 
-      
-      /* Configuración de la imagen de fondo */
-      background-image: url('img/img.png');
-      background-repeat: no-repeat;
-      background-position: center center;
-      background-size: cover;
-      background-attachment: fixed;
-    }
-
-    /* Si quieres que tu contenido tenga un ancho fijo de 730px, */
-    /* es mejor usar un contenedor dentro del body */
-    .contenido-principal {
-      max-width: 730px;
-      margin: 0 auto; /* Centra el contenido sobre el fondo */
-      padding: 20px;
-    }
-  </style>
-</head>
- 
-<center>
-<h1 style="color:#DEDEF7; font-size: 40px;">Hola Mundo</h1>
-</center>
-
-<center>
-<h2 style="color:#DEDEF7; font-size: 30px">Rolando</h2>
-</center>
-
-<center>
-<p style="color:#DEDEF7; font-size: 18px; margin-right: 280px">En caso de que no los vea, Buenos dias, Buenas tardes y Buenas noches...</p>   
-</center>
-
-<p style="color:#DEDEF7; font-size: 18px; margin-right 30px">Dale play y disfruta...</p>
-
-    
-
-
-
-<!DOCTYPE html>
-<html lang="es">
-<head>
     <meta charset="UTF-8">
-    <title>iPod Mini Player - Aluminio Unificado</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rolando - iPod Mini Player</title>
+    
     <style>
-        /* Cuerpo del iPod Mini con tamaño y posición */
+        body {
+            margin: 0;
+            padding: 0;
+            min-height: 100vh; 
+            background-image: url('img/img.png');
+            background-repeat: no-repeat;
+            background-position: center center;
+            background-size: cover;
+            background-attachment: fixed;
+        }
+
+        .contenido-principal {
+            max-width: 730px;
+            margin: 0 auto; 
+            padding: 20px;
+            position: relative;
+        }
+
+        /* Cuerpo del iPod Mini */
         .ipod-mini {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             background: linear-gradient(135deg, #3A3D40 0%, #181A1B 100%);
@@ -79,8 +48,6 @@
             gap: 25px;
             user-select: none;
             border: 1px solid #111;
-
-            /* Ubicación y Tamaño */
             margin: 4px;            
             transform: scale(0.5);        
             transform-origin: top left; 
@@ -152,7 +119,7 @@
             border: none;
         }
 
-        /* Click Wheel Blanca */
+        /* Click Wheel */
         .click-wheel {
             width: 150px;
             height: 150px;
@@ -163,7 +130,7 @@
             border: 1px solid #A8A8A8;
         }
 
-        /* Botón Central Play/Pausa */
+        /* Botones del iPod */
         .btn-play-central {
             position: absolute;
             top: 50%;
@@ -190,7 +157,6 @@
             background: #181A1B;
         }
 
-        /* Botón MENU */
         .btn-menu {
             position: absolute;
             top: 8px; 
@@ -204,7 +170,6 @@
             cursor: default;
         }
 
-        /* Botones laterales */
         .btn-nav-lateral {
             position: absolute;
             background: none;
@@ -222,72 +187,80 @@
             padding: 0;
         }
 
-        .btn-nav-lateral:active {
-            color: #000;
-        }
-
-        .btn-nav-lateral .icono {
-            font-size: 14px;
-            font-weight: bold;
-            line-height: 1;
-        }
-
-        .btn-nav-lateral .texto-pequeno {
-            font-size: 8px;
-            font-weight: bold;
-            text-transform: uppercase;
-            margin-top: 2px;
-            letter-spacing: 0.3px;
-        }
-
+        .btn-nav-lateral:active { color: #000; }
+        .btn-nav-lateral .icono { font-size: 14px; font-weight: bold; line-height: 1; }
+        .btn-nav-lateral .texto-pequeno { font-size: 8px; font-weight: bold; text-transform: uppercase; margin-top: 2px; letter-spacing: 0.3px; }
         .btn-ant { left: 6px; }
         .btn-sig { right: 6px; }
     </style>
 </head>
 <body>
 
-    <!-- Contenedor iPod Mini -->
-    <div class="ipod-mini">
-        
-        <!-- Pantalla LCD -->
-        <div class="pantalla-lcd">
-            <div id="info-pista" class="info-pista">Audio 1</div>
+    <div class="contenido-principal">
+        <center>
+            <h1 style="color:#DEDEF7; font-size: 40px;">Hola Mundo</h1>
+            <h2 style="color:#DEDEF7; font-size: 30px">Rolando</h2>
+            <p style="color:#DEDEF7; font-size: 18px; margin-right: 280px">En caso de que no los vea, Buenos dias, Buenas tardes y Buenas noches...</p>   
+        </center>
+
+        <p style="color:#DEDEF7; font-size: 18px; margin-right: 30px">Dale play y disfruta...</p>
+
+        <!-- Contenedor iPod Mini -->
+        <div class="ipod-mini">
             
-            <div class="progreso-contenedor">
-                <input type="range" id="barra-progreso" class="barra-progreso" value="0" min="0" max="100" step="0.1">
+            <!-- Pantalla LCD -->
+            <div class="pantalla-lcd">
+                <div id="info-pista" class="info-pista">Audio 1</div>
+                
+                <div class="progreso-contenedor">
+                    <input type="range" id="barra-progreso" class="barra-progreso" value="0" min="0" max="100" step="0.1">
+                </div>
+
+                <div class="tiempos">
+                    <span id="tiempo-actual">0:00</span>
+                    <span id="tiempo-total">0:00</span>
+                </div>
             </div>
 
-            <div class="tiempos">
-                <span id="tiempo-actual">0:00</span>
-                <span id="tiempo-total">0:00</span>
+            <!-- Rueda de Clics -->
+            <div class="click-wheel">
+                <span class="btn-menu">MENU</span>
+                
+                <!-- Botón Anterior -->
+                <button id="btn-anterior" class="btn-nav-lateral btn-ant">
+                    <span class="icono">◀◀</span>
+                    <span class="texto-pequeno">Ant.</span>
+                </button>
+
+                <!-- Botón Siguiente -->
+                <button id="btn-siguiente" class="btn-nav-lateral btn-sig">
+                    <span class="icono">▶▶</span>
+                    <span class="texto-pequeno">Sig.</span>
+                </button>
+                
+                <!-- Botón Central Play/Pausa -->
+                <button id="btn-play-pausa" class="btn-play-central">▶</button>
             </div>
         </div>
 
-        <!-- Rueda de Clics -->
-        <div class="click-wheel">
-            <span class="btn-menu">MENU</span>
-            
-            <!-- Botón Anterior -->
-            <button id="btn-anterior" class="btn-nav-lateral btn-ant">
-                <span class="icono">◀◀</span>
-                <span class="texto-pequeno">Ant.</span>
-            </button>
+        <!-- Tus imágenes GIF organizadas estructuralmente -->
+        <img src="img/gif.gif" style="width: 130px; position: relative; transform: translate(10px, -330px);" alt="">
+        <img src="img/gif1.gif" style="width: 120px; position: relative; transform: translate(135px, -200px);" alt="">
 
-            <!-- Botón Siguiente -->
-            <button id="btn-siguiente" class="btn-nav-lateral btn-sig">
-                <span class="icono">▶▶</span>
-                <span class="texto-pequeno">Sig.</span>
-            </button>
-            
-            <!-- Botón de Play/Pausa -->
-            <button id="btn-play-pausa" class="btn-play-central">▶</button>
+        <!-- ========================================================= -->
+        <!-- TU BLOQUE DE CONTADOR PRIVADO CON LA NUEVA API CORREGIDA  -->
+        <!-- ========================================================= -->
+        <div id="contador-privado" style="display: none; font-family: sans-serif; font-size: 14px; color: #888; text-align: center; margin: 30px auto; padding: 10px; max-width: 300px; border-top: 1px dashed #444;">
+          📊 Vistas totales (Modo Admin): <span id="numero-vistas-privado" style="font-weight: bold; color: #1db954;">...</span>
         </div>
+        <!-- ========================================================= -->
 
     </div>
 
     <!-- Elemento de Audio NATIVO -->
     <audio id="mi-audio"></audio>
 
+    <!-- Script del iPod Player -->
     <script>
         const listaAudios = [
             "audio/sonido1.mp3",
@@ -313,110 +286,6 @@
         btnPlayPausa.addEventListener("click", () => {
             if (reproductor.paused) {
                 reproductor.play()
-                    .then(() => btnPlayPausa.textContent = "||")
-                    .catch(err => console.log("Error al reproducir: ", err));
-            } else {
-                reproductor.pause();
-                btnPlayPausa.textContent = "▶";
-            }
-        });
 
-        btnSiguiente.addEventListener("click", () => {
-            indiceActual = (indiceActual + 1) % listaAudios.length;
-            cambiarPista(indiceActual);
-        });
-
-        btnAnterior.addEventListener("click", () => {
-            indiceActual = (indiceActual - 1 + listaAudios.length) % listaAudios.length;
-            cambiarPista(indiceActual);
-        });
-
-        function cambiarPista(indice) {
-            reproductor.src = listaAudios[indice];
-            reproductor.load();
-            actualizarTextoPista();
-            reproductor.play()
-                .then(() => btnPlayPausa.textContent = "||")
-                .catch(() => btnPlayPausa.textContent = "▶");
-        }
-
-        function actualizarTextoPista() {
-            infoPista.textContent = `Audio ${indiceActual + 1}`;
-        }
-
-        function formatearTiempo(segundos) {
-            if (isNaN(segundos)) return "0:00";
-            const min = Math.floor(segundos / 60);
-            const seg = Math.floor(segundos % 60);
-            return `${min}:${seg < 10 ? '0' : ''}${seg}`;
-        }
-
-        reproductor.addEventListener("timeupdate", () => {
-            if (reproductor.duration) {
-                const porcentaje = (reproductor.currentTime / reproductor.duration) * 100;
-                barraProgreso.value = porcentaje;
-                tiempoActualTxt.textContent = formatearTiempo(reproductor.currentTime);
-            }
-        });
-
-        reproductor.addEventListener("loadedmetadata", () => {
-            tiempoTotalTxt.textContent = formatearTiempo(reproductor.duration);
-        });
-
-        barraProgreso.addEventListener("input", () => {
-            if (reproductor.duration) {
-                const nuevoTiempo = (barraProgreso.value / 100) * reproductor.duration;
-                reproductor.currentTime = nuevoTiempo;
-            }
-        });
-
-        reproductor.addEventListener("ended", () => {
-            btnSiguiente.click();
-        });
-    </script>
-</body>
-</html>
-
-<img src="img/gif.gif" style="width: 130px; position: relative; transform: translate(10px, -330px);" alt="">
-
-
-<img src="img/gif1.gif" style="width: 120px; position: relative; transform: translate(135px, -200px);" alt="">
-
-<div id="contador-privado" style="display: none; font-family: sans-serif; font-size: 14px; color: #888; text-align: center; margin: 30px auto; padding: 10px; max-width: 300px; border-top: 1px dashed #444;">
-  📊 Vistas totales (Modo Admin): <span id="numero-vistas-privado" style="font-weight: bold; color: #1db954;">...</span>
-</div>
-
-<script>
-  document.addEventListener("DOMContentLoaded", function () {
-    // Generamos una clave única basada en tu sitio de GitHub para que cuente tus visitas reales
-    const sitioClave = 'rolando18_04_github_io_vistas';
-    
-    // Hacemos la petición a una API de conteo real que suma +1 en cada recarga
-    fetch(`https://moondb.xyz{sitioClave}/hit`)
-      .then(response => {
-        if (!response.ok) throw new Error('Error en respuesta de servidor');
-        return response.json();
-      })
-      .then(data => {
-        // Asigna el número acumulado al elemento HTML en base a la respuesta del servidor
-        // Nota: Si la API devuelve un formato plano o estructurado, lo aseguramos aquí:
-        const totalVistas = data.value || data.count || data;
-        document.getElementById("numero-vistas-privado").innerText = totalVistas;
-        
-        // Verifica de manera 100% privada si en la barra de direcciones pusiste ?adminrola
-        const urlParams = new URLSearchParams(window.location.search);
-        if (urlParams.has('adminrola')) {
-          document.getElementById("contador-privado").style.display = "block";
-        }
-      })
-      .catch(err => {
-        console.error("Error al cargar el contador:", err);
-        document.getElementById("numero-vistas-privado").innerText = "Error";
-      });
-  });
-</script>
-
-</body>
-</html>
 
 
