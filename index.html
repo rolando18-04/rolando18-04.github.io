@@ -387,12 +387,13 @@
 <div id="bloque-admin" style="display: none; background: #000000; color: #00ff00; padding: 15px; margin: 20px 0; border-radius: 8px; border: 2px solid #00ff00; font-family: monospace; text-align: center; font-size: 1.1em; line-height: 1.6em;">
   📊 MODO ADMIN ACTIVADO (Lectura Segura) <br>
   Vistas totales globales: <strong id="vistas">Cargando...</strong> <br>
-  Última visita registrada: <span id="fecha-ultima" style="color: #00ffff;">Cargando...</span>
+  Última visita registrada en la nube: <span id="fecha-ultima" style="color: #00ffff;">Cargando...</span>
 </div>
 
 <script>
-  // Tu clave única global en la nube
-  var miClaveGlobal = "rolando1804_github_io_vistas_estables_2026";
+  // Claves globales en la nube (Servidor externo)
+  var miClaveContador = "rolando1804_github_io_vistas_estables_2026";
+  var miClaveFecha = "rolando1804_github_io_fecha_estable_2026";
 
   function obtenerFechaActual() {
     var ahora = new Date();
@@ -405,46 +406,40 @@
   }
 
   document.addEventListener("DOMContentLoaded", function() {
-    // Detectamos si la URL contiene la palabra "admin"
     var direccionWeb = window.location.href.toLowerCase();
     var esAdmin = direccionWeb.indexOf("admin") !== -1;
 
-    // Determinamos la operación de la API (get para leer, hit para sumar)
-    var operacion = esAdmin ? "get" : "hit";
-    var urlBase = "https://countapi.mileshilliard.com/api/v1/" + operacion + "/" + miClaveGlobal;
-
-    // 1. LEER LA FECHA GUARDADA: Recuperamos la última fecha de visita guardada en este navegador
-    var ultimaFechaGuardada = localStorage.getItem("r1804_fecha_registro");
+    var apiBase = "https://countapi.mileshilliard.com/api/v1";
 
     if (esAdmin) {
-      // Si eres Admin, hacemos visible el recuadro negro
+      // 1. MODO ADMINISTRADOR: Mostrar recuadro y consultar datos guardados sin alterar nada
       document.getElementById("bloque-admin").style.display = "block";
-      
-      // CORRECCIÓN: Mostramos la última fecha guardada. Si está vacío, ponemos que es la primera vez.
-      document.getElementById("fecha-ultima").innerText = ultimaFechaGuardada ? ultimaFechaGuardada : "No hay registros previos";
-    } else {
-      // Si es un visitante normal (o tú navegando normalmente), guardamos la fecha ACTUAL antes de que se vaya
-      localStorage.setItem("r1804_fecha_registro", obtenerFechaActual());
-    }
 
-    // Petición limpia a la API
-    fetch(urlBase)
-      .then(function(response) {
-        if (!response.ok) throw new Error("Error en la respuesta del servidor");
-        return response.json();
-      })
-      .then(function(data) {
-        var elementoVistas = document.getElementById("vistas");
-        if (elementoVistas && data && data.value !== undefined) {
-          elementoVistas.innerText = data.value;
-        }
-      })
-      .catch(function(error) {
-        console.error("Detalle técnico:", error);
-        if (esAdmin) {
-          document.getElementById("vistas").innerText = "Error de conexión";
-        }
-      });
+      // Obtener las visitas globales (Lectura limpia)
+      fetch(apiBase + "/get/" + miClaveContador)
+        .then(res => res.json())
+        .then(data => {
+          document.getElementById("vistas").innerText = data.value || 0;
+        }).catch(() => document.getElementById("vistas").innerText = "Error");
+
+      // Obtener la fecha global guardada en la nube por el último usuario real
+      fetch(apiBase + "/get/" + miClaveFecha)
+        .then(res => res.json())
+        .then(data => {
+          // Decodificamos el texto de la fecha guardada en el servidor externo
+          document.getElementById("fecha-ultima").innerText = data.note ? data.note : "Sin registros";
+        }).catch(() => document.getElementById("fecha-ultima").innerText = "Error de sincronización");
+
+    } else {
+      // 2. MODO VISITANTE NORMAL: Registra la visita (+1) y actualiza la fecha en la nube
+      var fechaDeEsteAcceso = obtenerFechaActual();
+
+      // Sumar +1 al contador global
+      fetch(apiBase + "/hit/" + miClaveContador);
+
+      // Guardar de forma remota la fecha actual usando el parámetro 'note' o 'update' del servidor
+      fetch(apiBase + "/set/" + miClaveFecha + "?note=" + encodeURIComponent(fechaDeEsteAcceso));
+    }
   });
 </script>
 
