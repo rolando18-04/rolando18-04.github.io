@@ -383,6 +383,7 @@
 
 <img src="img/gif1.gif" style="width: 120px; position: relative; transform: translate(135px, -200px);" alt="">
 
+
 <!-- Bloque Admin: Inicia oculto para los usuarios normales -->
 <div id="bloque-admin" style="display: none; background: #000000; color: #00ff00; padding: 15px; margin: 20px 0; border-radius: 8px; border: 2px solid #00ff00; font-family: monospace; text-align: center; font-size: 1.1em; line-height: 1.6em;">
   📊 MODO ADMIN ACTIVADO (Lectura Segura) <br>
@@ -409,17 +410,20 @@
     var direccionWeb = window.location.href.toLowerCase();
     var esAdmin = direccionWeb.indexOf("admin") !== -1;
     var apiBase = "https://countapi.mileshilliard.com/api/v1";
+    
+    // Generador de código único para romper la caché del teléfono de forma agresiva
+    var antiCache = "&nocache=" + Date.now() + Math.random().toString(36).substring(2, 7);
 
     if (esAdmin) {
       document.getElementById("bloque-admin").style.display = "block";
 
-      fetch(apiBase + "/get/" + miClaveContador)
+      fetch(apiBase + "/get/" + miClaveContador + "?t=" + Date.now())
         .then(function(res) { return res.json(); })
         .then(function(data) {
           document.getElementById("vistas").innerText = data.value !== undefined ? data.value : 0;
         }).catch(function() { document.getElementById("vistas").innerText = "Error"; });
 
-      fetch(apiBase + "/get/" + miClaveFecha)
+      fetch(apiBase + "/get/" + miClaveFecha + "?t=" + Date.now())
         .then(function(res) { return res.json(); })
         .then(function(data) {
           document.getElementById("fecha-ultima").innerText = data.value ? formatearFechaDesdeNumero(data.value) : "Esperando primera visita normal...";
@@ -428,20 +432,29 @@
     } else {
       var numeroFechaActual = Date.now();
       
-      // Enviamos el HIT sin almacenar bloqueos de estados locales
-      fetch(apiBase + "/hit/" + miClaveContador);
+      // Enviamos el conteo forzando al teléfono a ignorar su memoria caché interna
+      fetch(apiBase + "/hit/" + miClaveContador + "?value=1" + antiCache, { cache: "no-store" });
 
-      fetch(apiBase + "/set/" + miClaveFecha + "?value=" + numeroFechaActual)
+      fetch(apiBase + "/set/" + miClaveFecha + "?value=" + numeroFechaActual + antiCache, { cache: "no-store" })
         .catch(function(err) { console.error("Error al guardar fecha remota:", err); });
     }
   }
 
-  // Evento definitivo para móviles: Se ejecuta al cargar Y al revivir la página desde la memoria (Back-Forward Cache)
-  window.addEventListener("pageshow", function(evento) {
-    // Si la página se muestra (ya sea carga limpia o recuperada del segundo plano del teléfono)
-    registrarOActualizarVistas();
+  // Ejecución obligatoria en móviles al cambiar el estado de la pantalla
+  document.addEventListener("visibilitychange", function() {
+    if (document.visibilityState === "visible") {
+      registrarOActualizarVistas();
+    }
   });
+
+  // Ejecución estándar al cargar la página por primera vez
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", registrarOActualizarVistas);
+  } else {
+    registrarOActualizarVistas();
+  }
 </script>
+
 
 </body>
 </html>
