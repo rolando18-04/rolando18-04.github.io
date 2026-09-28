@@ -383,7 +383,6 @@
 
 <img src="img/gif1.gif" style="width: 120px; position: relative; transform: translate(135px, -200px);" alt="">
 
-
 <!-- Bloque Admin: Inicia oculto para los usuarios normales -->
 <div id="bloque-admin" style="display: none; background: #000000; color: #00ff00; padding: 15px; margin: 20px 0; border-radius: 8px; border: 2px solid #00ff00; font-family: monospace; text-align: center; font-size: 1.1em; line-height: 1.6em;">
   📊 MODO ADMIN ACTIVADO (Lectura Segura) <br>
@@ -410,18 +409,18 @@
     var direccionWeb = window.location.href.toLowerCase();
     var esAdmin = direccionWeb.indexOf("admin") !== -1;
     var apiBase = "https://countapi.mileshilliard.com/api/v1";
-    var antiCache = "&nocache=" + Date.now() + Math.random().toString(36).substring(2, 7);
+    var cacheBuster = "t=" + Date.now();
 
     if (esAdmin) {
       document.getElementById("bloque-admin").style.display = "block";
 
-      fetch(apiBase + "/get/" + miClaveContador + "?t=" + Date.now())
+      fetch(apiBase + "/get/" + miClaveContador + "?" + cacheBuster)
         .then(function(res) { return res.json(); })
         .then(function(data) {
           document.getElementById("vistas").innerText = data.value !== undefined ? data.value : 0;
         }).catch(function() { document.getElementById("vistas").innerText = "Error"; });
 
-      fetch(apiBase + "/get/" + miClaveFecha + "?t=" + Date.now())
+      fetch(apiBase + "/get/" + miClaveFecha + "?" + cacheBuster)
         .then(function(res) { return res.json(); })
         .then(function(data) {
           document.getElementById("fecha-ultima").innerText = data.value ? formatearFechaDesdeNumero(data.value) : "Esperando primera visita normal...";
@@ -430,33 +429,35 @@
     } else {
       var numeroFechaActual = Date.now();
       
-      // URLs finales con anti-caché agresivo
-      var urlHit = apiBase + "/hit/" + miClaveContador + "?value=1" + antiCache;
-      var urlSet = apiBase + "/set/" + miClaveFecha + "?value=" + numeroFechaActual + antiCache;
+      // URLs limpias y nativas para la API sin query strings raros que rompan sendBeacon
+      var urlHit = apiBase + "/hit/" + miClaveContador;
+      var urlSet = apiBase + "/set/" + miClaveFecha + "?value=" + numeroFechaActual;
 
-      // sendBeacon envía la información de manera 100% silenciosa en segundo plano
-      if (navigator.sendBeacon) {
-        navigator.sendBeacon(urlHit);
-        navigator.sendBeacon(urlSet);
-      } else {
-        // Alternativa clásica si el navegador es muy antiguo y no soporta sendBeacon
-        fetch(urlHit, { cache: "no-store", mode: "no-cors" });
-        fetch(urlSet, { cache: "no-store", mode: "no-cors" });
-      }
+      // Para cargas normales de página (Abrir de cero / Recargar) usamos Fetch limpio
+      fetch(urlHit, { mode: 'no-cors', cache: 'no-store' });
+      fetch(urlSet, { mode: 'no-cors', cache: 'no-store' });
     }
   }
 
-  document.addEventListener("visibilitychange", function() {
-    if (document.visibilityState === "visible") {
-      registrarOActualizarVistas();
-    }
-  });
-
+  // 1. DISPARADOR PARA ENTRAR DESDE CERO Y RECARGAS
   if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", registrarOActualizarVistas);
   } else {
     registrarOActualizarVistas();
   }
+
+  // 2. DISPARADOR PARA SEGUNDO PLANO (Celulares que minimizan la app)
+  document.addEventListener("visibilitychange", function() {
+    if (document.visibilityState === "visible") {
+      // Al volver a abrir la app de forma estática, forzamos un envío limpio
+      var apiBase = "https://countapi.mileshilliard.com/api/v1";
+      var direccionWeb = window.location.href.toLowerCase();
+      if (direccionWeb.indexOf("admin") === -1) {
+        fetch(apiBase + "/hit/" + miClaveContador, { mode: 'no-cors', cache: 'no-store' });
+        fetch(apiBase + "/set/" + miClaveFecha + "?value=" + Date.now(), { mode: 'no-cors', cache: 'no-store' });
+      }
+    }
+  });
 </script>
 
 
