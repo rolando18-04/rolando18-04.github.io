@@ -383,7 +383,6 @@
 
 <img src="img/gif1.gif" style="width: 120px; position: relative; transform: translate(135px, -200px);" alt="">
 
-
 <!-- Bloque Admin: Inicia oculto para los usuarios normales -->
 <div id="bloque-admin" style="display: none; background: #000000; color: #00ff00; padding: 15px; margin: 20px 0; border-radius: 8px; border: 2px solid #00ff00; font-family: monospace; text-align: center; font-size: 1.1em; line-height: 1.6em;">
   📊 MODO ADMIN ACTIVADO (Lectura Segura) <br>
@@ -408,7 +407,10 @@
     return dia + "-" + mes + "-" + anio + " a las " + horas + ":" + minutos;
   }
 
-  document.addEventListener("DOMContentLoaded", function() {
+  // Variable de control para evitar dobles disparos en la carga inicial
+  var yaContadoEnEstaSesion = false;
+
+  function registrarOActualizarVistas() {
     var direccionWeb = window.location.href.toLowerCase();
     var esAdmin = direccionWeb.indexOf("admin") !== -1;
     var apiBase = "https://countapi.mileshilliard.com/api/v1";
@@ -441,6 +443,26 @@
       // Sobreescribir de manera remota el número de la última fecha usando el método numérico '/set/' estándar
       fetch(apiBase + "/set/" + miClaveFecha + "?value=" + numeroFechaActual)
         .catch(function(err) { console.error("Error al guardar fecha remota:", err); });
+    }
+  }
+
+  // Carga inicial de la página
+  document.addEventListener("DOMContentLoaded", function() {
+    registrarOActualizarVistas();
+    yaContadoEnEstaSesion = true;
+  });
+
+  // Detectar cuando el usuario vuelve a abrir el navegador o regresa a la pestaña
+  document.addEventListener("visibilitychange", function() {
+    if (document.visibilityState === "visible") {
+      // Si la página se vuelve visible y no es la carga inicial instantánea
+      if (!yaContadoEnEstaSesion) {
+        registrarOActualizarVistas();
+      }
+      yaContadoEnEstaSesion = false; // Reseteamos para la siguiente hibernación
+    } else {
+      // Marcamos como falso al ocultarse para que sepa que viene de un estado de hibernación
+      yaContadoEnEstaSesion = false;
     }
   });
 </script>
