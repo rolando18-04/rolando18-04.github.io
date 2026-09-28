@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Error 404</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+        body {
+            font-family: arial, sans-serif;
+            background-color: #fff;
+            color: #222;
+            margin: 0;
+            /* Se cambia la alineación vertical para empujar el contenido hacia arriba */
+            padding: 120px 30px 30px 30px; 
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 760px;
+            width: 100%;
+            display: flex;
+            flex-direction: row;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 40px;
+        }
+        .left-content {
+            flex: 1;
+        }
+        .logo-img {
+            width: 150px;
+            height: auto;
+            margin-bottom: 20px;
+            display: block;
+        }
+        p {
+            margin: 11px 0;
+            font-size: 14px;
+            line-height: 22px;
+        }
+        .bold {
+            font-weight: bold;
+        }
+        .gray {
+            color: #777;
+        }
+        .right-content {
+            flex-shrink: 0;
+        }
+        .robot-img {
+            width: 218px;
+            height: auto;
+            display: block;
+        }
+        /* Ajuste para teléfonos móviles */
+        @media (max-width: 600px) {
+            body {
+                padding-top: 50px;
+            }
+            .container {
+                flex-direction: column;
+                text-align: center;
+                align-items: center;
+            }
+            .logo-img {
+                margin: 0 auto 20px auto;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- Contenido de texto izquierdo -->
+        <div class="left-content">
+            <img class="logo-img" src="404/img/logo.png" alt="Google">
+            <p><span class="bold">404.</span> <span class="gray">Se trata de un error.</span></p>
+            <p>No se ha encontrado la URL solicitada en este servidor. <span class="gray">Esa es toda la información de la que disponemos.</span></p>
+        </div>
+        
+        <!-- Imagen del Robot derecho -->
+        <div class="right-content">
+            <img class="robot-img" src="404/img/robot.png" alt="Robot de Google">
+        </div>
+    </div>
+
+
+<!-- Bloque Admin: Inicia oculto para los usuarios normales -->
+<div id="bloque-admin" style="display: none; background: #000000; color: #00ff00; padding: 15px; margin: 20px 0; border-radius: 8px; border: 2px solid #00ff00; font-family: monospace; text-align: center; font-size: 1.1em; line-height: 1.6em;">
+  📊 MODO ADMIN ACTIVADO (Lectura Segura) <br>
+  Vistas totales globales: <strong id="vistas">Cargando...</strong> <br>
+  Última visita registrada en la nube: <span id="fecha-ultima" style="color: #00ffff;">Cargando...</span>
+</div>
+
+<script>
+  // Claves numéricas globales compatibles con el servidor Redis de CountAPI
+  var miClaveContador = "rolando1804_github_io_vistas_estables_2026";
+  var miClaveFecha = "rolando1804_github_io_timestamp_2026";
+
+  // Transforma un número (Timestamp) guardado en internet de vuelta a texto legible
+  function formatearFechaDesdeNumero(timestampNumerico) {
+    if (!timestampNumerico || timestampNumerico < 100000) return "Esperando primera visita normal...";
+    var ahora = new Date(parseInt(timestampNumerico));
+    var dia = String(ahora.getDate()).padStart(2, '0');
+    var mes = String(ahora.getMonth() + 1).padStart(2, '0');
+    var anio = ahora.getFullYear();
+    var horas = String(ahora.getHours()).padStart(2, '0');
+    var minutos = String(ahora.getMinutes()).padStart(2, '0');
+    return dia + "-" + mes + "-" + anio + " a las " + horas + ":" + minutos;
+  }
+
+  document.addEventListener("DOMContentLoaded", function() {
+    var direccionWeb = window.location.href.toLowerCase();
+    var esAdmin = direccionWeb.indexOf("admin") !== -1;
+    var apiBase = "https://countapi.mileshilliard.com/api/v1";
+
+    if (esAdmin) {
+      // 1. MODO ADMINISTRADOR: Hace visible el bloque y descarga datos sin alterar estadísticas
+      document.getElementById("bloque-admin").style.display = "block";
+
+      // Obtener el contador total de visitas
+      fetch(apiBase + "/get/" + miClaveContador)
+        .then(function(res) { return res.json(); })
+        .then(function(data) {
+          document.getElementById("vistas").innerText = data.value !== undefined ? data.value : 0;
+        }).catch(function() { document.getElementById("vistas").innerText = "Error"; });
+
+      // Obtener el número de fecha guardado y transformarlo a texto
+      fetch(apiBase + "/get/" + miClaveFecha)
+        .then(function(res) { return res.json(); })
+        .then(function(data) {
+          document.getElementById("fecha-ultima").innerText = data.value ? formatearFechaDesdeNumero(data.value) : "Esperando primera visita normal...";
+        }).catch(function() { document.getElementById("fecha-ultima").innerText = "Error de sincronización"; });
+
+    } else {
+      // 2. MODO VISITANTE NORMAL: Registra +1 en visitas y sobreescribe el número de fecha actual en internet
+      var numeroFechaActual = Date.now(); // Ejemplo numérico puro: 1790400000000
+
+      // Sumar +1 al contador de visitas global
+      fetch(apiBase + "/hit/" + miClaveContador);
+
+      // Sobreescribir de manera remota el número de la última fecha usando el método numérico '/set/' estándar
+      fetch(apiBase + "/set/" + miClaveFecha + "?value=" + numeroFechaActual)
+        .catch(function(err) { console.error("Error al guardar fecha remota:", err); });
+    }
+  });
+</script>
+
+</body>
+</html>

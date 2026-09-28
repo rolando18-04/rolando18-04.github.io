@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sitio en Mantenimiento</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            background-color: #000;
+            /* Ruta apuntando a tu carpeta 'img' */
+            background-image: url('404/img/mantenimiento.gif');
+            background-repeat: no-repeat;
+            background-position: center center;
+            background-attachment: fixed;
+            background-size: contain;
+            height: 100vh;
+            display: flex;
+            flex-direction: column; 
+            justify-content: flex-start; /* Ubica el contenedor en la parte superior */
+            align-items: center;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #fff;
+            overflow: hidden;
+            position: relative; /* Habilita el posicionamiento independiente del bloque de emojis */
+        }
+
+        /* --- Contenedor general de la transición --- */
+        #intro-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 100;
+            cursor: pointer;
+            display: flex;
+            touch-action: none; /* Bloquea gestos nativos del móvil en esta área */
+        }
+
+        /* --- Las dos puertas negras (telón) --- */
+        .door {
+            width: 50%;
+            height: 100%;
+            background-color: #000;
+            transition: transform 1.0s ease-out; 
+            will-change: transform;
+        }
+
+        /* Desplazamiento de los paneles hacia los extremos laterales */
+        #intro-overlay.open .door-left {
+            transform: translateX(-100%);
+        }
+        #intro-overlay.open .door-right {
+            transform: translateX(100%);
+        }
+
+        /* Contenedor del cuadro azul */
+        .container {
+            text-align: center;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 20px 40px;
+            border-radius: 10px;
+            border: 1px solid #0055ff;
+            max-width: 90%;
+            z-index: 10;
+            margin-top: 30px; /* Posición deseada del cuadro */
+            animation: container-neon-flicker 3s infinite alternate;
+        }
+
+        /* Animación de parpadeo neón para el borde y la sombra del cuadro azul */
+        @keyframes container-neon-flicker {
+            0%, 15%, 20%, 23%, 50%, 55%, 100% {
+                border-color: #0055ff;
+                box-shadow: 0 0 15px rgba(0, 85, 255, 0.6), 0 0 30px rgba(56, 182, 255, 0.3), inset 0 0 10px rgba(0, 85, 255, 0.3);
+            }
+            16%, 19%, 21%, 22%, 51%, 54% {
+                border-color: #002266;
+                box-shadow: 0 0 4px rgba(0, 85, 255, 0.1);
+            }
+        }
+
+        /* Contenedor para agrupar las 3 calaveras y mantenerlas centradas abajo */
+        .emoji-loader {
+            position: absolute;
+            /* 👇 MODIFICA ESTE VALOR PARA SUBIR O BAJAR EL GRUPO DE EMOJIS 👇 */
+            bottom: 120px; 
+            /* -------------------------------------------------------------- */
+            left: 50%;
+            transform: translateX(-50%); /* Centrado horizontal exacto */
+            z-index: 10;
+            display: flex;
+            gap: 20px; /* Espacio horizontal de separación entre cada calavera */
+        }
+
+        /* Estilo adaptado para los emojis individuales */
+        .neon-emoji {
+            font-size: 4rem; 
+            display: inline-block;
+            opacity: 0.1; /* Estado base apagado */
+            filter: drop-shadow(0 0 2px rgba(0, 85, 255, 0.2));
+        }
+
+        /* MODIFICADO: Asignación de animaciones independientes sincronizadas a un ciclo total de 2 segundos */
+        .neon-emoji:nth-child(1) {
+            animation: loading-step1 2s infinite, glitch-neon-flicker 2.5s infinite alternate;
+        }
+        .neon-emoji:nth-child(2) {
+            animation: loading-step2 2s infinite, glitch-neon-flicker 2.5s infinite alternate;
+        }
+        .neon-emoji:nth-child(3) {
+            animation: loading-step3 2s infinite, glitch-neon-flicker 2.5s infinite alternate;
+        }
+
+        /* NUEVAS ANIMACIONES: Controlan la aparición acumulativa "uno a uno y se queda" */
+        @keyframes loading-step1 {
+            0%, 20% { opacity: 0.1; filter: drop-shadow(0 0 2px rgba(0, 85, 255, 0.2)); }
+            25%, 90% { opacity: 1; filter: drop-shadow(0 0 8px #0055ff) drop-shadow(0 0 20px #38b6ff); }
+            95%, 100% { opacity: 0.1; filter: drop-shadow(0 0 2px rgba(0, 85, 255, 0.2)); }
+        }
+
+        @keyframes loading-step2 {
+            0%, 45% { opacity: 0.1; filter: drop-shadow(0 0 2px rgba(0, 85, 255, 0.2)); }
+            50%, 90% { opacity: 1; filter: drop-shadow(0 0 8px #0055ff) drop-shadow(0 0 20px #38b6ff); }
+            95%, 100% { opacity: 0.1; filter: drop-shadow(0 0 2px rgba(0, 85, 255, 0.2)); }
+        }
+
+        @keyframes loading-step3 {
+            0%, 70% { opacity: 0.1; filter: drop-shadow(0 0 2px rgba(0, 85, 255, 0.2)); }
+            75%, 90% { opacity: 1; filter: drop-shadow(0 0 8px #0055ff) drop-shadow(0 0 20px #38b6ff); }
+            95%, 100% { opacity: 0.1; filter: drop-shadow(0 0 2px rgba(0, 85, 255, 0.2)); }
+        }
+
+        /* Efecto neón y animación glitch al título h1 */
+        h1 {
+            font-size: 2.5rem;
+            color: #38b6ff;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-shadow: 0 0 5px #0055ff, 0 0 10px #0055ff, 0 0 20px #38b6ff;
+            animation: glitch-neon-flicker 2.5s infinite alternate;
+        }
+
+        /* Animación para simular fallas aleatorias e intermitentes en la luz neón */
+        @keyframes glitch-neon-flicker {
+            0%, 18%, 22%, 25%, 53%, 57%, 100% {
+                text-shadow: 0 0 5px #0055ff, 0 0 10px #0055ff, 0 0 20px #38b6ff;
+            }
+            19%, 21%, 23%, 24%, 54%, 56% {
+                text-shadow: none;
+            }
+        }
+        
+        p {
+            font-size: 1.1rem;
+            color: #a0a0a0;
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Cortina dividida en dos paneles -->
+    <div id="intro-overlay">
+        <div class="door door-left"></div>
+        <div class="door door-right"></div>
+    </div>
+
+    <!-- Tu música en la carpeta audio -->
+    <audio id="bg-audio" src="404/audio/mant1.mp3" loop></audio>
+
+    <!-- El cuadro permanece fijado en la parte superior deseada -->
+    <div class="container">
+        <h1>Estamos Trabajando...</h1>
+        <p>Sitio en mantenimiento, volveremos pronto. ¡Gracias por tu paciencia!</p>
+    </div>
+
+    <!-- Estructura de emojis separados para animación secuencial -->
+    <div class="emoji-loader">
+        <span class="neon-emoji">☠️</span>
+        <span class="neon-emoji">☠️</span>
+        <span class="neon-emoji">☠️</span>
+    </div>
+
+    <script>
+        const overlay = document.getElementById('intro-overlay');
+        let yaIniciado = false;
+
+        function iniciarSitio() {
+            if (yaIniciado) return;
+            yaIniciado = true;
+
+            const audio = document.getElementById('bg-audio');
+            
+            // Inicia la reproducción de música
+            audio.play().then(() => {
+                console.log("Audio iniciado correctamente.");
+            }).catch(error => {
+                console.log("Control de reproducción de audio:", error);
+            });
+            
+            // Dispara la animación de apertura lenta hacia los lados
+            overlay.classList.add('open');
+            
+            setTimeout(() => {
+                overlay.style.display = 'none';
+            }, 1000); 
+        }
+
+        // 1. Evento para hacer Clic (PC y clics directos en móvil)
+        overlay.addEventListener('click', iniciarSitio);
+
+        // 2. Eventos táctiles optimizados con cancelación de acciones nativas del navegador
+        let touchStartX = 0;
+        let touchStartY = 0;
+
+        overlay.addEventListener('touchstart', (e) => {
+            touchStartX = e.changedTouches[0].screenX;
+            touchStartY = e.changedTouches[0].screenY;
+        }, { passive: true });
+
+        overlay.addEventListener('touchmove', (e) => {
+            if (e.cancelable) e.preventDefault(); 
+        }, { passive: false });
+
+        overlay.addEventListener('touchend', (e) => {
+            const touchEndX = e.changedTouches[0].screenX;
+            const touchEndY = e.changedTouches[0].screenY;
+            
+            const diffX = Math.abs(touchEndX - touchStartX); 
+            const diffY = Math.abs(touchEndY - touchStartY);
+            
+            if (diffX > 5 || diffY > 5) {
+                iniciarSitio();
+            }
+        }, { passive: true });
+    </script>
+    
+    
+    <!-- Bloque Admin: Inicia oculto para los usuarios normales -->
+<div id="bloque-admin" style="display: none; background: #000000; color: #00ff00; padding: 15px; margin: 20px 0; border-radius: 8px; border: 2px solid #00ff00; font-family: monospace; text-align: center; font-size: 1.1em; line-height: 1.6em;">
+  📊 MODO ADMIN ACTIVADO (Lectura Segura) <br>
+  Vistas totales globales: <strong id="vistas">Cargando...</strong> <br>
+  Última visita registrada en la nube: <span id="fecha-ultima" style="color: #00ffff;">Cargando...</span>
+</div>
+
+<script>
+  // Claves numéricas globales compatibles con el servidor Redis de CountAPI
+  var miClaveContador = "rolando1804_github_io_vistas_estables_2026";
+  var miClaveFecha = "rolando1804_github_io_timestamp_2026";
+
+  // Transforma un número (Timestamp) guardado en internet de vuelta a texto legible
+  function formatearFechaDesdeNumero(timestampNumerico) {
+    if (!timestampNumerico || timestampNumerico < 100000) return "Esperando primera visita normal...";
+    var ahora = new Date(parseInt(timestampNumerico));
+    var dia = String(ahora.getDate()).padStart(2, '0');
+    var mes = String(ahora.getMonth() + 1).padStart(2, '0');
+    var anio = ahora.getFullYear();
+    var horas = String(ahora.getHours()).padStart(2, '0');
+    var minutos = String(ahora.getMinutes()).padStart(2, '0');
+    return dia + "-" + mes + "-" + anio + " a las " + horas + ":" + minutos;
+  }
+
+  document.addEventListener("DOMContentLoaded", function() {
+    var direccionWeb = window.location.href.toLowerCase();
+    var esAdmin = direccionWeb.indexOf("admin") !== -1;
+    var apiBase = "https://countapi.mileshilliard.com/api/v1";
+
+    if (esAdmin) {
+      // 1. MODO ADMINISTRADOR: Hace visible el bloque y descarga datos sin alterar estadísticas
+      document.getElementById("bloque-admin").style.display = "block";
+
+      // Obtener el contador total de visitas
+      fetch(apiBase + "/get/" + miClaveContador)
+        .then(function(res) { return res.json(); })
+        .then(function(data) {
+          document.getElementById("vistas").innerText = data.value !== undefined ? data.value : 0;
+        }).catch(function() { document.getElementById("vistas").innerText = "Error"; });
+
+      // Obtener el número de fecha guardado y transformarlo a texto
+      fetch(apiBase + "/get/" + miClaveFecha)
+        .then(function(res) { return res.json(); })
+        .then(function(data) {
+          document.getElementById("fecha-ultima").innerText = data.value ? formatearFechaDesdeNumero(data.value) : "Esperando primera visita normal...";
+        }).catch(function() { document.getElementById("fecha-ultima").innerText = "Error de sincronización"; });
+
+    } else {
+      // 2. MODO VISITANTE NORMAL: Registra +1 en visitas y sobreescribe el número de fecha actual en internet
+      var numeroFechaActual = Date.now(); // Ejemplo numérico puro: 1790400000000
+
+      // Sumar +1 al contador de visitas global
+      fetch(apiBase + "/hit/" + miClaveContador);
+
+      // Sobreescribir de manera remota el número de la última fecha usando el método numérico '/set/' estándar
+      fetch(apiBase + "/set/" + miClaveFecha + "?value=" + numeroFechaActual)
+        .catch(function(err) { console.error("Error al guardar fecha remota:", err); });
+    }
+  });
+</script>
+
+</body>
+</html>
