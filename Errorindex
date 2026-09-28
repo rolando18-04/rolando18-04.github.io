@@ -89,7 +89,6 @@
         </div>
     </div>
 
-
 <!-- Bloque Admin: Inicia oculto para los usuarios normales -->
 <div id="bloque-admin" style="display: none; background: #000000; color: #00ff00; padding: 15px; margin: 20px 0; border-radius: 8px; border: 2px solid #00ff00; font-family: monospace; text-align: center; font-size: 1.1em; line-height: 1.6em;">
   📊 MODO ADMIN ACTIVADO (Lectura Segura) <br>
@@ -98,11 +97,9 @@
 </div>
 
 <script>
-  // Claves numéricas globales compatibles con el servidor Redis de CountAPI
   var miClaveContador = "rolando1804_github_io_vistas_estables_2026";
   var miClaveFecha = "rolando1804_github_io_timestamp_2026";
 
-  // Transforma un número (Timestamp) guardado en internet de vuelta a texto legible
   function formatearFechaDesdeNumero(timestampNumerico) {
     if (!timestampNumerico || timestampNumerico < 100000) return "Esperando primera visita normal...";
     var ahora = new Date(parseInt(timestampNumerico));
@@ -114,42 +111,61 @@
     return dia + "-" + mes + "-" + anio + " a las " + horas + ":" + minutos;
   }
 
-  document.addEventListener("DOMContentLoaded", function() {
+  function registrarOActualizarVistas() {
     var direccionWeb = window.location.href.toLowerCase();
     var esAdmin = direccionWeb.indexOf("admin") !== -1;
     var apiBase = "https://countapi.mileshilliard.com/api/v1";
+    var cacheBuster = "t=" + Date.now();
 
     if (esAdmin) {
-      // 1. MODO ADMINISTRADOR: Hace visible el bloque y descarga datos sin alterar estadísticas
       document.getElementById("bloque-admin").style.display = "block";
 
-      // Obtener el contador total de visitas
-      fetch(apiBase + "/get/" + miClaveContador)
+      fetch(apiBase + "/get/" + miClaveContador + "?" + cacheBuster)
         .then(function(res) { return res.json(); })
         .then(function(data) {
           document.getElementById("vistas").innerText = data.value !== undefined ? data.value : 0;
         }).catch(function() { document.getElementById("vistas").innerText = "Error"; });
 
-      // Obtener el número de fecha guardado y transformarlo a texto
-      fetch(apiBase + "/get/" + miClaveFecha)
+      fetch(apiBase + "/get/" + miClaveFecha + "?" + cacheBuster)
         .then(function(res) { return res.json(); })
         .then(function(data) {
           document.getElementById("fecha-ultima").innerText = data.value ? formatearFechaDesdeNumero(data.value) : "Esperando primera visita normal...";
         }).catch(function() { document.getElementById("fecha-ultima").innerText = "Error de sincronización"; });
 
     } else {
-      // 2. MODO VISITANTE NORMAL: Registra +1 en visitas y sobreescribe el número de fecha actual en internet
-      var numeroFechaActual = Date.now(); // Ejemplo numérico puro: 1790400000000
+      var numeroFechaActual = Date.now();
+      
+      // URLs limpias y nativas para la API sin query strings raros que rompan sendBeacon
+      var urlHit = apiBase + "/hit/" + miClaveContador;
+      var urlSet = apiBase + "/set/" + miClaveFecha + "?value=" + numeroFechaActual;
 
-      // Sumar +1 al contador de visitas global
-      fetch(apiBase + "/hit/" + miClaveContador);
+      // Para cargas normales de página (Abrir de cero / Recargar) usamos Fetch limpio
+      fetch(urlHit, { mode: 'no-cors', cache: 'no-store' });
+      fetch(urlSet, { mode: 'no-cors', cache: 'no-store' });
+    }
+  }
 
-      // Sobreescribir de manera remota el número de la última fecha usando el método numérico '/set/' estándar
-      fetch(apiBase + "/set/" + miClaveFecha + "?value=" + numeroFechaActual)
-        .catch(function(err) { console.error("Error al guardar fecha remota:", err); });
+  // 1. DISPARADOR PARA ENTRAR DESDE CERO Y RECARGAS
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", registrarOActualizarVistas);
+  } else {
+    registrarOActualizarVistas();
+  }
+
+  // 2. DISPARADOR PARA SEGUNDO PLANO (Celulares que minimizan la app)
+  document.addEventListener("visibilitychange", function() {
+    if (document.visibilityState === "visible") {
+      // Al volver a abrir la app de forma estática, forzamos un envío limpio
+      var apiBase = "https://countapi.mileshilliard.com/api/v1";
+      var direccionWeb = window.location.href.toLowerCase();
+      if (direccionWeb.indexOf("admin") === -1) {
+        fetch(apiBase + "/hit/" + miClaveContador, { mode: 'no-cors', cache: 'no-store' });
+        fetch(apiBase + "/set/" + miClaveFecha + "?value=" + Date.now(), { mode: 'no-cors', cache: 'no-store' });
+      }
     }
   });
 </script>
+
 
 </body>
 </html>
