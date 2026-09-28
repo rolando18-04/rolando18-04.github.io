@@ -391,11 +391,9 @@
 </div>
 
 <script>
-  // Claves numéricas globales compatibles con el servidor Redis de CountAPI
   var miClaveContador = "rolando1804_github_io_vistas_estables_2026";
   var miClaveFecha = "rolando1804_github_io_timestamp_2026";
 
-  // Transforma un número (Timestamp) guardado en internet de vuelta a texto legible
   function formatearFechaDesdeNumero(timestampNumerico) {
     if (!timestampNumerico || timestampNumerico < 100000) return "Esperando primera visita normal...";
     var ahora = new Date(parseInt(timestampNumerico));
@@ -407,26 +405,20 @@
     return dia + "-" + mes + "-" + anio + " a las " + horas + ":" + minutos;
   }
 
-  // Variable de control para evitar dobles disparos en la carga inicial
-  var yaContadoEnEstaSesion = false;
-
   function registrarOActualizarVistas() {
     var direccionWeb = window.location.href.toLowerCase();
     var esAdmin = direccionWeb.indexOf("admin") !== -1;
     var apiBase = "https://countapi.mileshilliard.com/api/v1";
 
     if (esAdmin) {
-      // 1. MODO ADMINISTRADOR: Hace visible el bloque y descarga datos sin alterar estadísticas
       document.getElementById("bloque-admin").style.display = "block";
 
-      // Obtener el contador total de visitas
       fetch(apiBase + "/get/" + miClaveContador)
         .then(function(res) { return res.json(); })
         .then(function(data) {
           document.getElementById("vistas").innerText = data.value !== undefined ? data.value : 0;
         }).catch(function() { document.getElementById("vistas").innerText = "Error"; });
 
-      // Obtener el número de fecha guardado y transformarlo a texto
       fetch(apiBase + "/get/" + miClaveFecha)
         .then(function(res) { return res.json(); })
         .then(function(data) {
@@ -434,39 +426,22 @@
         }).catch(function() { document.getElementById("fecha-ultima").innerText = "Error de sincronización"; });
 
     } else {
-      // 2. MODO VISITANTE NORMAL: Registra +1 en visitas y sobreescribe el número de fecha actual en internet
-      var numeroFechaActual = Date.now(); // Ejemplo numérico puro: 1790400000000
-
-      // Sumar +1 al contador de visitas global
+      var numeroFechaActual = Date.now();
+      
+      // Enviamos el HIT sin almacenar bloqueos de estados locales
       fetch(apiBase + "/hit/" + miClaveContador);
 
-      // Sobreescribir de manera remota el número de la última fecha usando el método numérico '/set/' estándar
       fetch(apiBase + "/set/" + miClaveFecha + "?value=" + numeroFechaActual)
         .catch(function(err) { console.error("Error al guardar fecha remota:", err); });
     }
   }
 
-  // Carga inicial de la página
-  document.addEventListener("DOMContentLoaded", function() {
+  // Evento definitivo para móviles: Se ejecuta al cargar Y al revivir la página desde la memoria (Back-Forward Cache)
+  window.addEventListener("pageshow", function(evento) {
+    // Si la página se muestra (ya sea carga limpia o recuperada del segundo plano del teléfono)
     registrarOActualizarVistas();
-    yaContadoEnEstaSesion = true;
-  });
-
-  // Detectar cuando el usuario vuelve a abrir el navegador o regresa a la pestaña
-  document.addEventListener("visibilitychange", function() {
-    if (document.visibilityState === "visible") {
-      // Si la página se vuelve visible y no es la carga inicial instantánea
-      if (!yaContadoEnEstaSesion) {
-        registrarOActualizarVistas();
-      }
-      yaContadoEnEstaSesion = false; // Reseteamos para la siguiente hibernación
-    } else {
-      // Marcamos como falso al ocultarse para que sepa que viene de un estado de hibernación
-      yaContadoEnEstaSesion = false;
-    }
   });
 </script>
-
 
 </body>
 </html>
