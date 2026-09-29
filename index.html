@@ -289,6 +289,7 @@
     <audio id="mi-audio"></audio>
 
     <script>
+        <script>
         const listaAudios = [
             "audio/001. CortexUS_ Not Broken (Original).mp3",
             "audio/002. Enjoy the parade.mp3",
@@ -343,8 +344,23 @@
             "audio/051. Zombie – The Cranberries _ Powerful Rock Metal Cover.mp3"
         ];
 
-      
         let indiceActual = 0;
+
+        // FUNCIÓN QUE COGE EL ARCHIVO Y MUESTRA EL NOMBRE LIMPIO EN EL LCD
+        function mostrarNombreEnPantalla(ruta) {
+            // Quita la carpeta "audio/" y la extensión ".mp3"
+            let nombreLimpio = ruta.replace("audio/", "").replace(".mp3", "");
+            
+            // Reemplaza los guiones bajos por espacios para que se vea estético
+            nombreLimpio = nombreLimpio.replaceAll("_", " ");
+            
+            // Busca tu elemento de la pantalla LCD y le asigna el nombre
+            const visorNombre = document.getElementById("nombre-cancion");
+            if (visorNombre) {
+                visorNombre.textContent = nombreLimpio;
+            }
+        }
+
         const reproductor = document.getElementById("mi-audio");
         const btnAnterior = document.getElementById("btn-anterior");
         const btnPlayPausa = document.getElementById("btn-play-pausa");
@@ -380,13 +396,17 @@
         });
 
         function cambiarPista(indice) {
-            reproductor.src = listaAudios[indice];
-            reproductor.load();
-            actualizarTextoPista();
-            reproductor.play()
-                .then(() => btnPlayPausa.textContent = "||")
-                .catch(() => btnPlayPausa.textContent = "▶");
-        }
+    reproductor.src = listaAudios[indice];
+    reproductor.load();
+    
+    // === ESTA ES LA NUEVA LÍNEA MÁGICA QUE AGREGAMOS ===
+    tiempoTotalTxt.previousElementSibling.textContent = listaAudios[indice].replace("audio/", "").replace(".mp3", "").replaceAll("_", " ");
+    
+    reproductor.play();
+    btnPlayPausa.textContent = "❚❚";
+    estaReproduciendo = true;
+}
+
 
         function actualizarTextoPista() {
             infoPista.textContent = `Audio ${indiceActual + 1}`;
