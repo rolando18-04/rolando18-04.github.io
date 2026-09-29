@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PNGP608PG5"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-PNGP608PG5');
+</script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rolando</title>
+  <style>
+    body {
+      /* Elimina los márgenes por defecto */
+      margin: 0;
+      padding: 0;
+      
+      /* Obliga al fondo a medir toda la altura de la pantalla */
+      min-height: 100vh; 
+      
+      /* Configuración de la imagen de fondo */
+      background-image: url('img/img.png');
+      background-repeat: no-repeat;
+      background-position: center center;
+      background-size: cover;
+      background-attachment: fixed;
+    }
+
+    /* Si quieres que tu contenido tenga un ancho fijo de 730px, */
+    /* es mejor usar un contenedor dentro del body */
+    .contenido-principal {
+      max-width: 730px;
+      margin: 0 auto; /* Centra el contenido sobre el fondo */
+      padding: 20px;
+    }
+  </style>
+</head>
+ 
+<center>
+<h1 style="color:#DEDEF7; font-size: 40px;">Hola Mundo</h1>
+</center>
+
+<center>
+<h2 style="color:#DEDEF7; font-size: 30px">Rolando</h2>
+</center>
+
+<center>
+<p style="color:#DEDEF7; font-size: 18px; margin-right: 280px">En caso de que no los vea, Buenos dias, Buenas tardes y Buenas noches...</p>   
+</center>
+
+<p style="color:#DEDEF7; font-size: 18px; margin-right 30px">Dale play y disfruta...</p>
+
+    
+
+
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>iPod Mini Player - Aluminio Unificado</title>
+    <style>
+        /* Cuerpo del iPod Mini con tamaño y posición */
+        .ipod-mini {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background: linear-gradient(135deg, #3A3D40 0%, #181A1B 100%);
+            width: 260px;
+            padding: 25px 20px;
+            border-radius: 24px;
+            box-shadow: inset 0 2px 4px rgba(255,255,255,0.2), 
+                        0 10px 25px rgba(0,0,0,0.5);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 25px;
+            user-select: none;
+            border: 1px solid #111;
+
+            /* Ubicación y Tamaño */
+            margin: 4px;            
+            transform: scale(0.5);        
+            transform-origin: top left; 
+        }
+
+        /* Pantalla LCD */
+        .pantalla-lcd {
+            background-color: #CBD5C0; 
+            width: 100%;
+            height: 90px;
+            border-radius: 6px;
+            border: 3px solid #222;
+            box-shadow: inset 0 3px 6px rgba(0,0,0,0.3);
+            padding: 12px;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            color: #2B302A; 
+        }
+
+        .info-pista {
+            font-size: 14px;
+            font-weight: bold;
+            letter-spacing: 0.5px;
+        }
+
+        .tiempos {
+            display: flex;
+            justify-content: space-between;
+            font-size: 11px;
+            font-weight: bold;
+        }
+
+        /* Barra de progreso */
+        .progreso-contenedor {
+            width: 100%;
+            margin-top: 5px;
+        }
+
+        .barra-progreso {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 100%;
+            height: 8px;
+            background: #A6B49A;
+            border: 1px solid #55604D;
+            border-radius: 2px;
+            outline: none;
+            cursor: pointer;
+        }
+
+        .barra-progreso::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 6px;
+            height: 14px;
+            background: #2B302A;
+            cursor: pointer;
+            border-radius: 1px;
+        }
+
+        .barra-progreso::-moz-range-thumb {
+            width: 6px;
+            height: 14px;
+            background: #2B302A;
+            cursor: pointer;
+            border-radius: 1px;
+            border: none;
+        }
+
+        /* Click Wheel Blanca */
+        .click-wheel {
+            width: 150px;
+            height: 150px;
+            background: radial-gradient(circle, #EAEAEA 0%, #DCDCDC 30%, #E8E8E8 70%, #CECECE 100%);
+            border-radius: 50%;
+            position: relative;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.4), inset 0 2px 4px rgba(255,255,255,0.6);
+            border: 1px solid #A8A8A8;
+        }
+
+        /* Botón Central Play/Pausa */
+        .btn-play-central {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 54px;
+            height: 54px;
+            background: linear-gradient(135deg, #3A3D40 0%, #202224 100%);
+            color: #FFFFFF;
+            border-radius: 50%;
+            border: 1px solid #111;
+            cursor: pointer;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.3), inset 0 1px 2px rgba(255,255,255,0.2);
+            z-index: 10;
+            font-size: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s, transform 0.1s;
+        }
+
+        .btn-play-central:active {
+            transform: translate(-50%, -50%) scale(0.95);
+            background: #181A1B;
+        }
+
+        /* Botón MENU */
+        .btn-menu {
+            position: absolute;
+            top: 8px; 
+            left: 50%; 
+            transform: translateX(-50%);
+            background: none;
+            border: none;
+            color: #666;
+            font-size: 12px;
+            font-weight: bold;
+            cursor: default;
+        }
+
+        /* Botones laterales */
+        .btn-nav-lateral {
+            position: absolute;
+            background: none;
+            border: none;
+            color: #555;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 45px;
+            height: 40px;
+            top: 50%;
+            transform: translateY(-50%);
+            padding: 0;
+        }
+
+        .btn-nav-lateral:active {
+            color: #000;
+        }
+
+        .btn-nav-lateral .icono {
+            font-size: 14px;
+            font-weight: bold;
+            line-height: 1;
+        }
+
+        .btn-nav-lateral .texto-pequeno {
+            font-size: 8px;
+            font-weight: bold;
+            text-transform: uppercase;
+            margin-top: 2px;
+            letter-spacing: 0.3px;
+        }
+
+        .btn-ant { left: 6px; }
+        .btn-sig { right: 6px; }
+    </style>
+</head>
+<body>
+
+    <!-- Contenedor iPod Mini -->
+    <div class="ipod-mini">
+        
+        <!-- Pantalla LCD -->
+        <div class="pantalla-lcd">
+            <div id="info-pista" class="info-pista">Audio 1</div>
+            
+            <div class="progreso-contenedor">
+                <input type="range" id="barra-progreso" class="barra-progreso" value="0" min="0" max="100" step="0.1">
+            </div>
+
+            <div class="tiempos">
+                <span id="tiempo-actual">0:00</span>
+                <span id="tiempo-total">0:00</span>
+            </div>
+        </div>
+
+        <!-- Rueda de Clics -->
+        <div class="click-wheel">
+            <span class="btn-menu">MENU</span>
+            
+            <!-- Botón Anterior -->
+            <button id="btn-anterior" class="btn-nav-lateral btn-ant">
+                <span class="icono">◀◀</span>
+                <span class="texto-pequeno">Ant.</span>
+            </button>
+
+            <!-- Botón Siguiente -->
+            <button id="btn-siguiente" class="btn-nav-lateral btn-sig">
+                <span class="icono">▶▶</span>
+                <span class="texto-pequeno">Sig.</span>
+            </button>
+            
+            <!-- Botón de Play/Pausa -->
+            <button id="btn-play-pausa" class="btn-play-central">▶</button>
+        </div>
+
+    </div>
+
+    <!-- Elemento de Audio NATIVO -->
+    <audio id="mi-audio"></audio>
+
+    <script>
+        const listaAudios = [
+            "audio/001. CortexUS_ Not Broken (Original).mp3",
+            "audio/002. Enjoy the parade.mp3",
+            "audio/003. RUN Motherf_cker - Dark Country Metal.mp3",
+            "audio/004. Backstreet Boys - I Want It That Way (Dark Country).mp3",
+            "audio/005. NSYNC - Bye Bye Bye (Dark Country).mp3",
+            "audio/006. NSYNC - This I Promise You (Dark Country).mp3",
+            "audio/007. Let Her Go - Passenger _ Dark Country Rock Version _ Ghost Highway.mp3",
+            "audio/008. Losing My Religion - R.E.M. _ Dark Country Rock Version _ Ghost Highway.mp3",
+            "audio/009. IT_S MY LIFE – Bon Jovi _ Delta Blues Cover  _ Powerful _ Soulful Version.mp3",
+            "audio/010. TAKE ME TO CHURCH – Rock Blues Cover _ Dark _ Soulful Blues Version.mp3",
+            "audio/011. A Whole Lotta Love - Led Zeppelin _ Dark Country Rock Version.mp3",
+            "audio/012. A-ha – Take On Me _ Rock Blues Cover (Soulful Guitar _ Emotional Male Vocals).mp3",
+            "audio/013. Always – Bon Jovi _ Dark Country Blues Version _ Midnight Shadows.mp3",
+            "audio/014. AC_DC - Highway to Hell _ Dark Country Metal Cover.mp3",
+            "audio/015. AC_DC – Thunderstruck _ Dark Country Rock Cover.mp3",
+            "audio/016. All the Things She Said (metal cover by Leo Moracchioli).mp3",
+            "audio/017. Beat It (Dark Country).mp3",
+            "audio/018. Blacktop Hallelujah __ Rango Covers.mp3",
+            "audio/019. Careless Whisper – George Michael (Dark Country Cinematic Cover).mp3",
+            "audio/020. Dirty Diana - Michael Jackson _ Dark Country Rock Version.mp3",
+            "audio/021. Don_t Stop Believin_ - Journey _ Power Ballad.mp3",
+            "audio/022. Dream On - Aerosmith _ Dark Country Rock Version.mp3",
+            "audio/023. Fortunate Son - Creedence Clearwater Revival _ Dark Country Rock Version.mp3",
+            "audio/024. Guns N_ Roses - Sweet Child O_ Mine _ Epic Blues Rock Version _ Emotional 80s Rock Classic.mp3",
+            "audio/025. Hoobastank - The Reason (Dark Southern Rock).mp3",
+            "audio/026. I Don_t Recognize Myself Anymore _ Emotional Dark Country.mp3",
+            "audio/027. I Walk Alone.mp3",
+            "audio/028. In the Air Tonight – Dark Metal Version (Phil Collins).mp3",
+            "audio/029. In The End – Dark Country Outlaw Ballad _ Emotional Western Story.mp3",
+            "audio/030. Linkin Park - In the End (Dark Southern Rock).mp3",
+            "audio/031. Linkin Park - New Divide (Outlaw Cyber Rock).mp3",
+            "audio/032. Metallica _ Nothing Else Matter __ Dark Country _ Heavy Metal Combo.mp3",
+            "audio/033. Metallica - The Unforgiven (Dark Country Metal Cover).mp3",
+            "audio/034. My Heart Will Go On – Celine Dion - Blues Country Rock Version (1997).mp3",
+            "audio/035. My Immortal - Evanescence _ Dark Country Rock Version.mp3",
+            "audio/036. Numb (Dark Country Version).mp3",
+            "audio/037. OneRepublic - Apologize (Alternative Rock).mp3",
+            "audio/038. Rihanna - Umbrella (Epic Country Gospel).mp3",
+            "audio/039. Rolling in the Deep - Adele _ Dark Country Rock Version.mp3",
+            "audio/040. Shawn Mendes - There_s Nothing Holdin_ Me Back (Alternative Rock).mp3",
+            "audio/041. Smooth Criminal – Dark Rock (Michael Jackson).mp3",
+            "audio/042. Somebody That I Used to Know – Dark Rock (Gotye).mp3",
+            "audio/043. System of a Down - Chop Suey (Dark Southern Rock).mp3",
+            "audio/044. The Sound of Silence - Disturbed _ Blues Rock Cover _ Gentle BluesRock.mp3",
+            "audio/045. The Weight of the Wolves.mp3",
+            "audio/046. Thirty Seconds to Mars - The Kill (Dark Country).mp3",
+            "audio/047. Umbrella (metal cover by Leo Moracchioli).mp3",
+            "audio/048. WE WILL ROCK YOU.mp3",
+            "audio/049. WELCOME TO THE JUNGLE – Dark Country Outlaw Anthem_ Wild Western Song.mp3",
+            "audio/050. With or Without You – Rock Cover _ Bosluis Brigade.mp3",
+            "audio/051. Zombie – The Cranberries _ Powerful Rock Metal Cover.mp3"
+        ];
+
+      
+        let indiceActual = 0;
+        const reproductor = document.getElementById("mi-audio");
+        const btnAnterior = document.getElementById("btn-anterior");
+        const btnPlayPausa = document.getElementById("btn-play-pausa");
+        const btnSiguiente = document.getElementById("btn-siguiente");
+        
+        const barraProgreso = document.getElementById("barra-progreso");
+        const tiempoActualTxt = document.getElementById("tiempo-actual");
+        const tiempoTotalTxt = document.getElementById("tiempo-total");
+        const infoPista = document.getElementById("info-pista");
+
+        reproductor.src = listaAudios[indiceActual];
+        actualizarTextoPista();
+
+        btnPlayPausa.addEventListener("click", () => {
+            if (reproductor.paused) {
+                reproductor.play()
+                    .then(() => btnPlayPausa.textContent = "||")
+                    .catch(err => console.log("Error al reproducir: ", err));
+            } else {
+                reproductor.pause();
+                btnPlayPausa.textContent = "▶";
+            }
+        });
+
+        btnSiguiente.addEventListener("click", () => {
+            indiceActual = (indiceActual + 1) % listaAudios.length;
+            cambiarPista(indiceActual);
+        });
+
+        btnAnterior.addEventListener("click", () => {
+            indiceActual = (indiceActual - 1 + listaAudios.length) % listaAudios.length;
+            cambiarPista(indiceActual);
+        });
+
+        function cambiarPista(indice) {
+            reproductor.src = listaAudios[indice];
+            reproductor.load();
+            actualizarTextoPista();
+            reproductor.play()
+                .then(() => btnPlayPausa.textContent = "||")
+                .catch(() => btnPlayPausa.textContent = "▶");
+        }
+
+        function actualizarTextoPista() {
+            infoPista.textContent = `Audio ${indiceActual + 1}`;
+        }
+
+        function formatearTiempo(segundos) {
+            if (isNaN(segundos)) return "0:00";
+            const min = Math.floor(segundos / 60);
+            const seg = Math.floor(segundos % 60);
+            return `${min}:${seg < 10 ? '0' : ''}${seg}`;
+        }
+
+        reproductor.addEventListener("timeupdate", () => {
+            if (reproductor.duration) {
+                const porcentaje = (reproductor.currentTime / reproductor.duration) * 100;
+                barraProgreso.value = porcentaje;
+                tiempoActualTxt.textContent = formatearTiempo(reproductor.currentTime);
+            }
+        });
+
+        reproductor.addEventListener("loadedmetadata", () => {
+            tiempoTotalTxt.textContent = formatearTiempo(reproductor.duration);
+        });
+
+        barraProgreso.addEventListener("input", () => {
+            if (reproductor.duration) {
+                const nuevoTiempo = (barraProgreso.value / 100) * reproductor.duration;
+                reproductor.currentTime = nuevoTiempo;
+            }
+        });
+
+        reproductor.addEventListener("ended", () => {
+            btnSiguiente.click();
+        });
+    </script>
+</body>
+</html>
+
+<img src="img/gif.gif" style="width: 130px; position: relative; transform: translate(10px, -330px);" alt="">
+
+
+<img src="img/gif1.gif" style="width: 120px; position: relative; transform: translate(135px, -200px);" alt="">
+
+<!-- Bloque Admin: Inicia oculto para los usuarios normales -->
+<div id="bloque-admin" style="display: none; background: #000000; color: #00ff00; padding: 15px; margin: 20px 0; border-radius: 8px; border: 2px solid #00ff00; font-family: monospace; text-align: center; font-size: 1.1em; line-height: 1.6em;">
+  📊 MODO ADMIN ACTIVADO (Lectura Segura) <br>
+  Vistas totales globales: <strong id="vistas">Cargando...</strong> <br>
+  Última visita registrada en la nube: <span id="fecha-ultima" style="color: #00ffff;">Cargando...</span>
+</div>
+
+<script>
+  var miClaveContador = "rolando1804_github_io_vistas_estables_2026";
+  var miClaveFecha = "rolando1804_github_io_timestamp_2026";
+
+  function formatearFechaDesdeNumero(timestampNumerico) {
+    if (!timestampNumerico || timestampNumerico < 100000) return "Esperando primera visita normal...";
+    var ahora = new Date(parseInt(timestampNumerico));
+    var dia = String(ahora.getDate()).padStart(2, '0');
+    var mes = String(ahora.getMonth() + 1).padStart(2, '0');
+    var anio = ahora.getFullYear();
+    var horas = String(ahora.getHours()).padStart(2, '0');
+    var minutos = String(ahora.getMinutes()).padStart(2, '0');
+    return dia + "-" + mes + "-" + anio + " a las " + horas + ":" + minutos;
+  }
+
+  function registrarOActualizarVistas() {
+    var direccionWeb = window.location.href.toLowerCase();
+    var esAdmin = direccionWeb.indexOf("admin") !== -1;
+    var apiBase = "https://countapi.mileshilliard.com/api/v1";
+    var cacheBuster = "t=" + Date.now();
+
+    if (esAdmin) {
+      document.getElementById("bloque-admin").style.display = "block";
+
+      fetch(apiBase + "/get/" + miClaveContador + "?" + cacheBuster)
+        .then(function(res) { return res.json(); })
+        .then(function(data) {
+          document.getElementById("vistas").innerText = data.value !== undefined ? data.value : 0;
+        }).catch(function() { document.getElementById("vistas").innerText = "Error"; });
+
+      fetch(apiBase + "/get/" + miClaveFecha + "?" + cacheBuster)
+        .then(function(res) { return res.json(); })
+        .then(function(data) {
+          document.getElementById("fecha-ultima").innerText = data.value ? formatearFechaDesdeNumero(data.value) : "Esperando primera visita normal...";
+        }).catch(function() { document.getElementById("fecha-ultima").innerText = "Error de sincronización"; });
+
+    } else {
+      var numeroFechaActual = Date.now();
+      
+      // URLs limpias y nativas para la API sin query strings raros que rompan sendBeacon
+      var urlHit = apiBase + "/hit/" + miClaveContador;
+      var urlSet = apiBase + "/set/" + miClaveFecha + "?value=" + numeroFechaActual;
+
+      // Para cargas normales de página (Abrir de cero / Recargar) usamos Fetch limpio
+      fetch(urlHit, { mode: 'no-cors', cache: 'no-store' });
+      fetch(urlSet, { mode: 'no-cors', cache: 'no-store' });
+    }
+  }
+
+  // 1. DISPARADOR PARA ENTRAR DESDE CERO Y RECARGAS
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", registrarOActualizarVistas);
+  } else {
+    registrarOActualizarVistas();
+  }
+
+  // 2. DISPARADOR PARA SEGUNDO PLANO (Celulares que minimizan la app)
+  document.addEventListener("visibilitychange", function() {
+    if (document.visibilityState === "visible") {
+      // Al volver a abrir la app de forma estática, forzamos un envío limpio
+      var apiBase = "https://countapi.mileshilliard.com/api/v1";
+      var direccionWeb = window.location.href.toLowerCase();
+      if (direccionWeb.indexOf("admin") === -1) {
+        fetch(apiBase + "/hit/" + miClaveContador, { mode: 'no-cors', cache: 'no-store' });
+        fetch(apiBase + "/set/" + miClaveFecha + "?value=" + Date.now(), { mode: 'no-cors', cache: 'no-store' });
+      }
+    }
+  });
+</script>
+
+
+</body>
+</html>
