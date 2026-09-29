@@ -288,8 +288,7 @@
     <!-- Elemento de Audio NATIVO -->
     <audio id="mi-audio"></audio>
 
-    <script>
-        <script>
+<script>
         const listaAudios = [
             "audio/001. CortexUS_ Not Broken (Original).mp3",
             "audio/002. Enjoy the parade.mp3",
@@ -345,73 +344,72 @@
         ];
 
         let indiceActual = 0;
+        let estaReproduciendo = false;
 
-        // FUNCIÓN QUE COGE EL ARCHIVO Y MUESTRA EL NOMBRE LIMPIO EN EL LCD
-        function mostrarNombreEnPantalla(ruta) {
-            // Quita la carpeta "audio/" y la extensión ".mp3"
-            let nombreLimpio = ruta.replace("audio/", "").replace(".mp3", "");
-            
-            // Reemplaza los guiones bajos por espacios para que se vea estético
+        // Referencias del DOM corregidas según tus IDs reales
+        const reproductor = document.getElementById("mi-audio");
+        const btnAnterior = document.getElementById("btn-anterior");
+        const btnPlayPausa = document.getElementById("btn-play-pause");
+        const btnSiguiente = document.getElementById("btn-siguiente");
+
+        const barraProgreso = document.getElementById("barra-progreso");
+        const tiempoActualTxt = document.getElementById("tempo-actual");
+        const tiempoTotalTxt = document.getElementById("tempo-total");
+        const infoPistaTxt = document.querySelector(".info-pista");
+
+        // Función para actualizar dinámicamente el texto en tu LCD
+        function actualizarTextoLCD(rutaAudio) {
+            let nombreLimpio = rutaAudio.replace("audio/", "").replace(".mp3", "");
             nombreLimpio = nombreLimpio.replaceAll("_", " ");
-            
-            // Busca tu elemento de la pantalla LCD y le asigna el nombre
-            const visorNombre = document.getElementById("nombre-cancion");
-            if (visorNombre) {
-                visorNombre.textContent = nombreLimpio;
+            if (infoPistaTxt) {
+                infoPistaTxt.textContent = nombreLimpio;
             }
         }
 
-        const reproductor = document.getElementById("mi-audio");
-        const btnAnterior = document.getElementById("btn-anterior");
-        const btnPlayPausa = document.getElementById("btn-play-pausa");
-        const btnSiguiente = document.getElementById("btn-siguiente");
-        
-        const barraProgreso = document.getElementById("barra-progreso");
-        const tiempoActualTxt = document.getElementById("tiempo-actual");
-        const tiempoTotalTxt = document.getElementById("tiempo-total");
-        const infoPista = document.getElementById("info-pista");
-
+        // Carga inicial estática
         reproductor.src = listaAudios[indiceActual];
-        actualizarTextoPista();
+        actualizarTextoLCD(listaAudios[indiceActual]);
 
+        // Control central Play / Pausa
         btnPlayPausa.addEventListener("click", () => {
-            if (reproductor.paused) {
-                reproductor.play()
-                    .then(() => btnPlayPausa.textContent = "||")
-                    .catch(err => console.log("Error al reproducir: ", err));
-            } else {
+            if (estaReproduciendo) {
                 reproductor.pause();
                 btnPlayPausa.textContent = "▶";
+            } else {
+                reproductor.play().catch(e => console.log("Interacción requerida"));
+                btnPlayPausa.textContent = "❚❚";
             }
+            estaReproduciendo = !estaReproduciendo;
         });
 
+        // Botón Siguiente
         btnSiguiente.addEventListener("click", () => {
             indiceActual = (indiceActual + 1) % listaAudios.length;
             cambiarPista(indiceActual);
         });
 
+        // Botón Anterior
         btnAnterior.addEventListener("click", () => {
             indiceActual = (indiceActual - 1 + listaAudios.length) % listaAudios.length;
             cambiarPista(indiceActual);
         });
 
+        // Cambiar de pista unificado
         function cambiarPista(indice) {
-    reproductor.src = listaAudios[indice];
-    reproductor.load();
-    
-    // === ESTA ES LA NUEVA LÍNEA MÁGICA QUE AGREGAMOS ===
-    tiempoTotalTxt.previousElementSibling.textContent = listaAudios[indice].replace("audio/", "").replace(".mp3", "").replaceAll("_", " ");
-    
-    reproductor.play();
-    btnPlayPausa.textContent = "❚❚";
-    estaReproduciendo = true;
-}
-
-
-        function actualizarTextoPista() {
-            infoPista.textContent = `Audio ${indiceActual + 1}`;
+            reproductor.src = listaAudios[indice];
+            reproductor.load();
+            actualizarTextoLCD(listaAudios[indice]);
+            
+            if (estaReproduciendo) {
+                reproductor.play().catch(e => {});
+            } else {
+                reproductor.play().catch(e => {});
+                btnPlayPausa.textContent = "❚❚";
+                estaReproduciendo = true;
+            }
         }
 
+        // Conversor de segundos a formato 0:00
         function formatearTiempo(segundos) {
             if (isNaN(segundos)) return "0:00";
             const min = Math.floor(segundos / 60);
@@ -419,6 +417,7 @@
             return `${min}:${seg < 10 ? '0' : ''}${seg}`;
         }
 
+        // Actualizar barra y minutero en vivo
         reproductor.addEventListener("timeupdate", () => {
             if (reproductor.duration) {
                 const porcentaje = (reproductor.currentTime / reproductor.duration) * 100;
@@ -427,10 +426,12 @@
             }
         });
 
+        // Cargar duración total de la pista
         reproductor.addEventListener("loadedmetadata", () => {
             tiempoTotalTxt.textContent = formatearTiempo(reproductor.duration);
         });
 
+        // Arrastrar barra de progreso manual
         barraProgreso.addEventListener("input", () => {
             if (reproductor.duration) {
                 const nuevoTiempo = (barraProgreso.value / 100) * reproductor.duration;
@@ -438,10 +439,12 @@
             }
         });
 
+        // Avanzar de canción automáticamente al terminar
         reproductor.addEventListener("ended", () => {
             btnSiguiente.click();
         });
-    </script>
+</script>
+
 </body>
 </html>
 
